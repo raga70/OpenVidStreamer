@@ -1,0 +1,1 @@
+{"Token":"","Service":{"ID":"ServiceName-raga70sRog-f0e80451-b36e-4ea6-a517-7586cd2a271f","Service":"OpenVisStreamer.VideoLibrary","Tags":null,"Address":"localhost","Meta":null,"Port":5004,"Weights":{"Passing":1,"Warning":1},"EnableTagOverride":false,"Proxy":{"Mode":"","MeshGateway":{},"Expose":{}},"Connect":{},"PeerName":"","CreateIndex":0,"ModifyIndex":0},"Source":"remote"}

@@ -1,0 +1,13 @@
+{
+    "data_dir": "var/",
+    "log_level": "INFO",
+    "server": true,
+    "bootstrap_expect": 1,
+    "ui": true,
+    "client_addr": "127.0.0.1",
+    "bind_addr": "127.0.0.1",
+    "enable_script_checks": true,
+    "disable_remote_exec": false,
+    "node_name": "OpenVidStreamer.ManagementNdiscovary"
+  }
+  
