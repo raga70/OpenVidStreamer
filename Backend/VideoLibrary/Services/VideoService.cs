@@ -1,62 +1,40 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using Common.MBcontracts;
+using MassTransit;
+using OpenVisStreamer.VideoLibrary.Model;
 using OpenVisStreamer.VideoLibrary.Model.Entities;
-using OpenVisStreamer.VideoLibrary.Repository.EFC;
+using OpenVisStreamer.VideoLibrary.Model.Mappers;
 
-namespace OpenVisStreamer.VideoLibrary.Services
+namespace OpenVisStreamer.VideoLibrary.Services;
+
+public class VideoService
 {
-    public class VideoService(DatabaseContext context)
+    private readonly IRequestClient<RecommendationVideoRequest> _VideoRecommendationsRequestClient;
+    private readonly VideoMapper _videoMapper = new();
+    private readonly VideoRepository _videoRepository;
+    
+    public VideoService(VideoRepository videoRepository, IBus bus)
     {
-        public async Task Create(Video video)
-        {
-            context.Videos.Add(video);
-            await context.SaveChangesAsync();
-        }
-
-        public async Task<Video> Read(Guid id)
-        {
-            return await context.Videos.FindAsync(id);
-        }
-
-        public async Task Update(Video video)
-        {
-            context.Videos.Update(video);
-            await context.SaveChangesAsync();
-        }
-
-        public async Task Delete(Guid id)
-        {
-            var video = await context.Videos.FindAsync(id);
-            if (video != null)
-            {
-                context.Videos.Remove(video);
-                await context.SaveChangesAsync();
-            }
-        }
-        
-        public async Task AddLike(Guid id)
-        {
-            var video = await context.Videos.FindAsync(id);
-            if (video != null)
-            {
-                video.Likes++;
-                await context.SaveChangesAsync();
-            }
-        }
-        
-        public async Task AddDislike(Guid id)
-        {
-            var video = await context.Videos.FindAsync(id);
-            if (video != null)
-            {
-                video.Dislikes++;
-                await context.SaveChangesAsync();
-            }
-        }
-        
-        
-        
-        
-        
+        _VideoRecommendationsRequestClient = bus.CreateRequestClient<RecommendationVideoRequest>();
+        _videoRepository = videoRepository;
     }
+    
+    
+    public async Task<VideoDTO> GetVideoById(Guid videoId)
+    {
+        var video = await _videoRepository.GetVideoById(videoId);
+        return _videoMapper.VideoToVideoDto(video);
+    }
+
+
+    public async Task<List<VideoDTO>> GetRecommendedVideos(Guid userId,VideoCategory category)
+    {
+        var videoRecommendationsResponse = await _VideoRecommendationsRequestClient.GetResponse<RecommendationVideoResponse>(new
+        {
+            UserId = userId,
+            Category = category
+        });
+        var videos = await _videoRepository.GetVideosByVideoIds(videoRecommendationsResponse.Message.VideoIds);
+        return videos.Select(_videoMapper.VideoToVideoDto).ToList();
+    }
+    
 }

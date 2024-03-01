@@ -55,64 +55,12 @@ namespace OpenVidStreamer.APIGateway.Auth;
             }
 
 
-
-            string ExtractTokenFromJson(string jsonString)
-            {
-                var jObject = JObject.Parse(jsonString);
-                return jObject["token"]?.ToString();
-            }
-            if (Context.Request.Path.ToString().Contains("/beacon"))  //navigator.sendBeacon cant send headers [Used for saving& unlocking document on window.onbeforeunload]
-            {
-                //backup the original request body
-                var originalRequestBody = Context.Request.Body;
-                try   //ONCE THE BODY IS READ IT CANT BE READ AGAIN , and since navigator.sendBeacon cant send headers cant send the token in the header , i encoded the token in the body 
-                {
-                    Context.Request.EnableBuffering(); // Enable buffering so the body can be read multiple times
-                
-                //parse the token from the body
-                using var reader = new StreamReader(Context.Request.Body, Encoding.UTF8, leaveOpen: true);
-                var bodyString =  reader.ReadToEndAsync().Result;
-                 token =  ExtractTokenFromJson(bodyString);
-                 
-                 
-                 
-                 // Reset the request body stream position to 0
-                 Context.Request.Body.Position = 0;
-
-                 // Replace the request body with a new MemoryStream containing the original content
-                 var requestData = Encoding.UTF8.GetBytes(bodyString);
-                 var newRequestBody = new MemoryStream(requestData);
-                 Context.Request.Body = newRequestBody; 
-                }
-                catch (Exception e)
-                {
-                    Context.Request.Body = originalRequestBody;
-                    return Task.FromResult(AuthenticateResult.Fail(e.Message));
-                }
-            }
+            
             
             if (string.IsNullOrEmpty(token))
             {
                 return Task.FromResult(AuthenticateResult.Fail("Missing or malformed 'Authorization' header."));
             }
-
-            
-            //allow authentication with api secret if enabled
-            if (Convert.ToBoolean(_configuration["EnableDirectAcessToApiWithApiSecret"]))
-            {
-                if (_configuration["ApiSecret"] is not null && _configuration["ApiSecret"] != "")
-                {
-                    if(token == _configuration["ApiSecret"])
-                    {
-                        var identity = new ClaimsIdentity("DirectApiSecret");  // Create an identity, if needed
-                        var principal = new ClaimsPrincipal(identity);
-                        return Task.FromResult(AuthenticateResult.Success(new AuthenticationTicket(principal, Scheme.Name)));
-                    }
-                }
-            }
-            
-            
-            
             try
             {
                 var validationParameters = new TokenValidationParameters

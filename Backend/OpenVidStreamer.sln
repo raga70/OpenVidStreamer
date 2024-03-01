@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationAlgo", "Recom
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Upload", "Upload\Upload.csproj", "{A596B75B-7C96-4698-8717-4413700BCFB6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{14EEF60A-B38A-40C8-9AB2-3DE0109E7888}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{A596B75B-7C96-4698-8717-4413700BCFB6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A596B75B-7C96-4698-8717-4413700BCFB6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A596B75B-7C96-4698-8717-4413700BCFB6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14EEF60A-B38A-40C8-9AB2-3DE0109E7888}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14EEF60A-B38A-40C8-9AB2-3DE0109E7888}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14EEF60A-B38A-40C8-9AB2-3DE0109E7888}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14EEF60A-B38A-40C8-9AB2-3DE0109E7888}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

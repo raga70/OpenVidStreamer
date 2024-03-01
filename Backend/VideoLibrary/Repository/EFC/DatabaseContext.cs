@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using OpenVisStreamer.VideoLibrary.Model.Entities;
+using OpenVisStreamer.VideoLibrary.Repository.Entities;
 
 namespace OpenVisStreamer.VideoLibrary.Repository.EFC;
 

@@ -1,14 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-namespace OpenVisStreamer.VideoLibrary.Model.Entities;
+using OpenVisStreamer.VideoLibrary.Model.Entities;
+
+namespace OpenVisStreamer.VideoLibrary.Repository.Entities;
 
 [Table("Videos")] 
 public record Video
 {
     [Key] 
-    public Guid Id { get; set; } = Guid.NewGuid(); 
+    public Guid VideoId { get; set; } = Guid.NewGuid(); 
 
     [Required] 
     [StringLength(255)] 
@@ -18,20 +18,26 @@ public record Video
     public string Description { get; set; }
 
     [EnumDataType(typeof(VideoCategory))] 
-    public VideoCategory Category { get; set; }
+    public VideoCategory Category { get; set; }= VideoCategory.Other;
 
+    [Column(TypeName = "decimal(18, 2)")] 
+    public decimal videoLength { get; set; }
+    
     [Required] 
     public string VideoUri { get; set; }
 
     [Required] 
     public string ThumbnailUri { get; set; }
 
-    public List<Guid> LikedBy { get; set; } = new List<Guid>();
+    public int TotalLikes { get; set; } 
 
-    public List<Guid> DislikedBy { get; set; } = new List<Guid>();
+    public int TotalDislikes { get; set; }
 
     [Column(TypeName = "decimal(18, 2)")] 
-    public decimal WatchTime { get; set; }
+    public decimal TotalWatchTime { get; set; }
 
-  
+    public Guid uploadedByAccoutId { get; set; }
+    
+    public DateTime UploadDateTime { get; set; } = DateTime.Now;
+    
 }

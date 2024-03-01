@@ -5,6 +5,9 @@ namespace OpenVisStreamer.VideoLibrary.Model.Entities;
 
 public enum VideoCategory
 {
+    [Description("Other")]
+    Other,
+    
     [Description("Fun")]
     Fun,
     

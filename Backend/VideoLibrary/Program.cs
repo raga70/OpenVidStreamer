@@ -1,3 +1,5 @@
+using Consul;
+using MassTransit;
 using OpenVisStreamer.VideoLibrary;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +10,19 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
-
+builder.Services.AddMassTransit(busConfigurator =>
+{
+    busConfigurator.SetKebabCaseEndpointNameFormatter();
+    busConfigurator.UsingRabbitMq((context, configurator) =>
+    {
+        configurator.Host(new Uri(builder.Configuration["RabbitMQ:HostAddress"]!), h =>
+        {
+            h.Username(builder.Configuration["RabbitMQ:UserName"]);
+            h.Password(builder.Configuration["RabbitMQ:Password"]);
+        });
+        configurator.ConfigureEndpoints(context);
+    });
+});
 
 
 var app = builder.Build();

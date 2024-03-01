@@ -6,19 +6,29 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>true</InvariantGlobalization>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+        <RootNamespace>Account</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="BCrypt.Net" Version="0.1.0" />
         <PackageReference Include="Consul" Version="1.7.14.3" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.0-rc.2.23480.2"/>
+        <PackageReference Include="Polly" Version="8.3.0" />
         <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.1" />
+        <PackageReference Include="Riok.Mapperly" Version="3.4.0" />
+        <PackageReference Include="Stripe.net" Version="43.17.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0"/>
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
     </ItemGroup>
 
     <ItemGroup>
       <Content Include="..\.dockerignore">
         <Link>.dockerignore</Link>
       </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Common\Common.csproj" />
     </ItemGroup>
 
 </Project>
