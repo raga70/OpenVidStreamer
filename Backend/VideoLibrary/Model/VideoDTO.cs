@@ -1,4 +1,4 @@
-﻿using OpenVisStreamer.VideoLibrary.Model.Entities;
+﻿using Common.Model;
 
 namespace OpenVisStreamer.VideoLibrary.Model;
 public record VideoDTO

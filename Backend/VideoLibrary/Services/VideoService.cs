@@ -1,7 +1,7 @@
 ﻿using Common.MBcontracts;
+using Common.Model;
 using MassTransit;
 using OpenVisStreamer.VideoLibrary.Model;
-using OpenVisStreamer.VideoLibrary.Model.Entities;
 using OpenVisStreamer.VideoLibrary.Model.Mappers;
 
 namespace OpenVisStreamer.VideoLibrary.Services;
@@ -26,12 +26,13 @@ public class VideoService
     }
 
 
-    public async Task<List<VideoDTO>> GetRecommendedVideos(Guid userId,VideoCategory category)
+    public async Task<List<VideoDTO>> GetRecommendedVideos(Guid userId,VideoCategory category,int topN )
     {
         var videoRecommendationsResponse = await _VideoRecommendationsRequestClient.GetResponse<RecommendationVideoResponse>(new
         {
             UserId = userId,
-            Category = category
+            Category = category,
+            TopN = topN
         });
         var videos = await _videoRepository.GetVideosByVideoIds(videoRecommendationsResponse.Message.VideoIds);
         return videos.Select(_videoMapper.VideoToVideoDto).ToList();

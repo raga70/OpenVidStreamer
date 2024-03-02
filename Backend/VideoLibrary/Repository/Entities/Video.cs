@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using OpenVisStreamer.VideoLibrary.Model.Entities;
+using Common.Model;
 
 namespace OpenVisStreamer.VideoLibrary.Repository.Entities;
 
@@ -29,15 +29,11 @@ public record Video
     [Required] 
     public string ThumbnailUri { get; set; }
 
-    public int TotalLikes { get; set; } 
-
-    public int TotalDislikes { get; set; }
-
-    [Column(TypeName = "decimal(18, 2)")] 
-    public decimal TotalWatchTime { get; set; }
-
+   
+    [Required]
     public Guid uploadedByAccoutId { get; set; }
     
+   
     public DateTime UploadDateTime { get; set; } = DateTime.Now;
     
 }

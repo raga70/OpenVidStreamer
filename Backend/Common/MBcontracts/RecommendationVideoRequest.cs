@@ -1,9 +1,10 @@
-﻿using OpenVisStreamer.VideoLibrary.Model.Entities;
+﻿using Common.Model;
 
 namespace Common.MBcontracts;
 
 public record RecommendationVideoRequest
 {
-   public Guid UserId { get; }
-   public VideoCategory? Category { get; }
+   public Guid UserId { get; set; }
+   public VideoCategory? Category { get; set; }
+   public int TopN { get; set; }
 }

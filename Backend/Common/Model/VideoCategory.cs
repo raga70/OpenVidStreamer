@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Reflection;
 
-namespace OpenVisStreamer.VideoLibrary.Model.Entities;
+namespace Common.Model;
 
 public enum VideoCategory
 {

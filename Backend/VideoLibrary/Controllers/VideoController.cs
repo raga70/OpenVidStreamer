@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Common.Model;
+using Microsoft.AspNetCore.Mvc;
 using OpenVisStreamer.VideoLibrary.Model;
-using OpenVisStreamer.VideoLibrary.Model.Entities;
 using OpenVisStreamer.VideoLibrary.Services;
 
 namespace OpenVisStreamer.VideoLibrary.Controllers;
@@ -15,11 +15,11 @@ public class VideoController(VideoService _videoService) : ControllerBase
     /// <param name="category">if it`s not provided it will give general recommendations</param>
     /// <returns></returns>
     [HttpGet("recommendedVideos")]
-    public async Task<ActionResult<List<VideoDTO>>> GetRecommendedVideos(VideoCategory category)
+    public async Task<ActionResult<List<VideoDTO>>> GetRecommendedVideos(VideoCategory category,int topN = 20)
     {
         var userId = Common.AccIdExtractorFromHttpContext.GetAccId(HttpContext);
         
-        var videos = await _videoService.GetRecommendedVideos(new Guid(userId),category);
+        var videos = await _videoService.GetRecommendedVideos(new Guid(userId),category,topN);
         return Ok(videos);
     }
     
