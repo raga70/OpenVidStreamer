@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Consul;
 
-namespace Upload;
+namespace Render;
 
 public static class ConsulRegisterer
 {

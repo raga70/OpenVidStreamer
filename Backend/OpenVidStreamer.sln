@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VideoStreamer", "VideoStreamer\VideoStreamer.csproj", "{75AF3CBB-8BF0-435E-B909-8DB2EBAE132C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Render", "Render\Render.csproj", "{DBAEC32F-4430-487F-A421-D03842A9871C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +53,10 @@ Global
 		{75AF3CBB-8BF0-435E-B909-8DB2EBAE132C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75AF3CBB-8BF0-435E-B909-8DB2EBAE132C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75AF3CBB-8BF0-435E-B909-8DB2EBAE132C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBAEC32F-4430-487F-A421-D03842A9871C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBAEC32F-4430-487F-A421-D03842A9871C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBAEC32F-4430-487F-A421-D03842A9871C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBAEC32F-4430-487F-A421-D03842A9871C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

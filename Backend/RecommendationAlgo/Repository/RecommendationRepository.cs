@@ -1,7 +1,7 @@
 ﻿using Common.MBcontracts;
 using Common.Model;
 using Microsoft.EntityFrameworkCore;
-using OpenVisStreamer.VideoLibrary.Repository.EFC;
+using RecommendationAlgo.Repository.EFC;
 using RecommendationAlgo.Repository.Entities;
 using RecommendationAlgo.Repository.Model.DTO;
 using RecommendationAlgo.Services;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using RecommendationAlgo.Repository.Entities;
 
-namespace OpenVisStreamer.VideoLibrary.Repository.EFC;
+namespace RecommendationAlgo.Repository.EFC;
 
 public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbContext(options)
 {

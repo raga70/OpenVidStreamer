@@ -3,6 +3,7 @@ using Common.Model;
 using MassTransit;
 using OpenVisStreamer.VideoLibrary.Model;
 using OpenVisStreamer.VideoLibrary.Model.Mappers;
+using OpenVisStreamer.VideoLibrary.Repository;
 
 namespace OpenVisStreamer.VideoLibrary.Services;
 

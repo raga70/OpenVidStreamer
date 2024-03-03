@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Consul;
 
-namespace Upload;
+namespace VideoStreamer;
 
 public static class ConsulRegisterer
 {

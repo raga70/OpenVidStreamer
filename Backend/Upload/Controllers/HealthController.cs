@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 
-namespace Account.Controllers;
+namespace Upload.Controllers;
 
 [ApiController]
 public class HealthController(HealthCheckService healthCheckService) : ControllerBase

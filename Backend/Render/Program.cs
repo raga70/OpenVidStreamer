@@ -1,7 +1,6 @@
-using Consul;
 using MassTransit;
-using OpenVisStreamer.VideoLibrary;
-using OpenVisStreamer.VideoLibrary.MessageConsumers;
+using Render;
+using Render.MessageConsumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,13 +8,12 @@ var builder = WebApplication.CreateBuilder(args);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddHealthChecks();
 builder.Services.AddControllers();
+builder.Services.AddHealthChecks();
 builder.Services.AddMassTransit(busConfigurator =>
 {
     busConfigurator.SetKebabCaseEndpointNameFormatter();
-    busConfigurator.AddConsumer<UploadVideoRequestConsumer>();
-    busConfigurator.AddConsumer<UpdateVideoToPublicRequestConsumer>();
+    busConfigurator.AddConsumer<RenderVideoRequestConsumer>();
     busConfigurator.UsingRabbitMq((context, configurator) =>
     {
         configurator.Host(new Uri(builder.Configuration["RabbitMQ:HostAddress"]!), h =>
@@ -37,11 +35,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-
-
 app.MapControllers();
+app.UseHttpsRedirection();
 
 
 

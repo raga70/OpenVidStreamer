@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using OpenVisStreamer.VideoLibrary.Repository.EFC;
 using RecommendationAlgo.Repository;
+using RecommendationAlgo.Repository.EFC;
 
 namespace RecommendationAlgo.Services;
 

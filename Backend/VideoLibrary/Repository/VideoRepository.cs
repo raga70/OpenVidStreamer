@@ -1,10 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using OpenVisStreamer.VideoLibrary.Repository.EFC;
 using OpenVisStreamer.VideoLibrary.Repository.Entities;
 
-namespace OpenVisStreamer.VideoLibrary.Services
+namespace OpenVisStreamer.VideoLibrary.Repository
 {
     public class VideoRepository(DatabaseContext context)
     {
@@ -42,6 +40,19 @@ namespace OpenVisStreamer.VideoLibrary.Services
         public async Task<List<Video>> GetVideosByVideoIds(List<Guid> videoIds)
         {
             return await context.Videos.Where(v => videoIds.Contains(v.VideoId)).ToListAsync();
+        }
+        
+     
+        
+        public async Task UpdateVideoToPublic(Guid videoId)
+        {
+            var video = await context.Videos.FindAsync(videoId);
+            if (video != null)
+            {
+                video.IsPublic = true;
+                context.Videos.Update(video);
+                await context.SaveChangesAsync();
+            }
         }
         
     }

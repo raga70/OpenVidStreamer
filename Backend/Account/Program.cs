@@ -1,6 +1,7 @@
 using Account.Repository.EFC;
 using Account.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using OpenVisStreamer.VideoLibrary;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +17,7 @@ builder.Services.AddDbContext<DatabaseContext>(options=>options.UseMySql(builder
 //Service DI
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<StripePaymentService>();
-
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
