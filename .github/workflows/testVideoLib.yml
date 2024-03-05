@@ -1,4 +1,4 @@
-name: .NET
+name: .NET Build N Test videoLibrarry
 
 on:
   push:
