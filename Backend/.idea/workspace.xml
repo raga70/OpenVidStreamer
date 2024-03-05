@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="1b463ff3-f670-4715-b121-d9971f12adf8" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Common/MBcontracts/RenderVideoRequest.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VideoStreamer/entrypoint.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VideoStreamer/videoStreamer-deployment.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VideoStreamer/videoStreamer-hpa.yaml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VideoStreamer/videoStreamer-service.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/APIGateway/ocelot.json" beforeDir="false" afterPath="$PROJECT_DIR$/APIGateway/ocelot.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Account/Model/Mappers/AccountMapper.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Account/Model/Mappers/AccountMapper.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Account/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Account/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Account/Repository/EFC/DatabaseContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Account/Repository/EFC/DatabaseContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Account/Repository/Entities/Account.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Account/Repository/Entities/Account.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Account/Services/AccountService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Account/Services/AccountService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenVidStreamer.ManagementNdiscovary/var/raft/raft.db" beforeDir="false" afterPath="$PROJECT_DIR$/OpenVidStreamer.ManagementNdiscovary/var/raft/raft.db" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenVidStreamer.ManagementNdiscovary/var/server_metadata.json" beforeDir="false" afterPath="$PROJECT_DIR$/OpenVidStreamer.ManagementNdiscovary/var/server_metadata.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenVidStreamer.MessageBroker/Dockerfile" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/OpenVidStreamer.MessageBroker/init.sh" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Render/MessageConsumers/RenderVideoRequestConsumer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Render/MessageConsumers/RenderVideoRequestConsumer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Render/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Render/Properties/launchSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Render/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Render/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Upload/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Upload/Properties/launchSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Upload/Services/UploadService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Upload/Services/UploadService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Upload/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/Upload/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VideoLibrary/appsettings.Development.json" beforeDir="false" afterPath="$PROJECT_DIR$/VideoLibrary/appsettings.Development.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VideoLibrary/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/VideoLibrary/appsettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VideoStreamer/ConsulRegisterer.cs" beforeDir="false" afterPath="$PROJECT_DIR$/VideoStreamer/ConsulRegisterer.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VideoStreamer/Dockerfile" beforeDir="false" afterPath="$PROJECT_DIR$/VideoStreamer/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VideoStreamer/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/VideoStreamer/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VideoStreamer/Properties/launchSettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/VideoStreamer/Properties/launchSettings.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/VideoStreamer/appsettings.json" beforeDir="false" afterPath="$PROJECT_DIR$/VideoStreamer/appsettings.json" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 4
+}]]></component>
+  <component name="ProjectId" id="2dElpIIX1xvfo4MouQxFfXltsae" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="1b463ff3-f670-4715-b121-d9971f12adf8" name="Changes" comment="" />
+      <created>1709581302217</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1709581302217</updated>
+      <workItem from="1709581304304" duration="747000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

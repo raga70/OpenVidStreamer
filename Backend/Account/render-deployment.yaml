@@ -1,0 +1,29 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: account-deployment
+spec:
+  replicas: 2 
+  selector:
+    matchLabels:
+      app: account
+  template:
+    metadata:
+      labels:
+        app: account
+    spec:
+      containers:
+        - name: account
+          image: <your-microservice-image>:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: CONSUL_IP
+              value: consul-service.default.svc.cluster.local 
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: servicePort
+              value: "8081"
+       

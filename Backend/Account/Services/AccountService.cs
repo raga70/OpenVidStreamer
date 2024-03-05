@@ -20,7 +20,7 @@ public class AccountService(DatabaseContext _accountDbContext, IConfiguration co
     
     public async Task<Tuple<AccountDTO,string>> Register(RegisterRequestDTO request)
     {
-        var account = new Model.Entities.Account()
+        var account = new Repository.Entities.Account()
         {
         Email = request.email,
         PasswordHashed = BCrypt.Net.BCrypt.HashPassword(request.passwordUnhashed)

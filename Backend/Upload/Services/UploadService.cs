@@ -11,6 +11,7 @@ public class UploadService(IConfiguration configuration, IBus bus)
     private readonly char _pathSepator = Path.DirectorySeparatorChar;
 
     private readonly IRequestClient<UploadVideoRequest> _VideoUploadRequestClient = bus.CreateRequestClient<UploadVideoRequest>();
+    private readonly IRequestClient<RenderVideoRequest> _RenderVideoRequestClient = bus.CreateRequestClient<RenderVideoRequest>();
     
     public async Task UploadVideo(VideoUploadDTO videoMetadata, IFormFile videoFile, IFormFile thumbnailFile, string accId)
     {
@@ -58,8 +59,8 @@ public class UploadService(IConfiguration configuration, IBus bus)
             IsPublic = false
         };
         _VideoUploadRequestClient.Create(video);
-        
-        //todo: send to render service
+        _RenderVideoRequestClient.Create(new RenderVideoRequest() { VideoId = newVideoId, VideoUri = nonRenderedVideoPath });
+     
         //todo: call account service to reward the user
 
     }

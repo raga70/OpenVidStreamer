@@ -1,0 +1,29 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-library-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: video-library
+  template:
+    metadata:
+      labels:
+        app: video-library
+    spec:
+      containers:
+        - name: video-library
+          image: <your-microservice-image>:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: CONSUL_IP
+              value: consul-service.default.svc.cluster.local
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: servicePort
+              value: "8081"
+       

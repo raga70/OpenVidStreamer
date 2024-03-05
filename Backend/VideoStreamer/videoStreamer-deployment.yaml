@@ -1,0 +1,29 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: video-streamer-deployment
+spec:
+  replicas: 2 
+  selector:
+    matchLabels:
+      app: video-streamer
+  template:
+    metadata:
+      labels:
+        app: video-streamer
+    spec:
+      containers:
+        - name: video-streamer
+          image: <your-microservice-image>:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: CONSUL_IP
+              value: consul-service.default.svc.cluster.local 
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: servicePort
+              value: "8081"
+       

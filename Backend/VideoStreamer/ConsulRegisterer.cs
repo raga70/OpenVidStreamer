@@ -14,7 +14,7 @@ public static class ConsulRegisterer
         
         string serviceId = $"ServiceName-{Dns.GetHostName()}-{Guid.NewGuid()}";
         string serviceIp = Environment.GetEnvironmentVariable("POD_IP") ?? configuration.GetValue<string>("POD_IP"); //gets the pod ip from the environment variable {"POD_IP"} injected by kubernetes inside of the docker container passed to the app  or fallback to the appsettings.json
-        
+      
         
         var consulClient = new ConsulClient(x => x.Address = new Uri(configuration.GetValue<string>("consulUri")));
 

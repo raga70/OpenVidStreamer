@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Account.Model.Entities
+namespace Account.Repository.Entities
 {
     [Table("Accounts")] 
     public record Account

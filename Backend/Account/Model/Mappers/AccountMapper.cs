@@ -6,5 +6,5 @@ namespace Account.Model.Mappers;
 [Mapper]
 public static partial  class AccountMapper
 {
-  public static  partial AccountDTO AccountToAccountDto(Entities.Account account);
+  public static  partial AccountDTO AccountToAccountDto(Repository.Entities.Account account);
 }
