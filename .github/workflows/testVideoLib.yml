@@ -1,0 +1,28 @@
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'Backend/VideoLibrary/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'Backend/VideoLibrary/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore Backend/VideoLibrary/VideoLibrary.csproj
+    - name: Build
+      run: dotnet build Backend/VideoLibrary/VideoLibrary.csproj --no-restore
+    - name: Test
+      run: dotnet test Backend/VideoLibrary/VideoLibrary.csproj --no-build --verbosity normal
