@@ -9,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 //builder.Services.AddControllers();
 
-builder.Configuration.AddJsonFile("ocelot.json");
+builder.Configuration.AddJsonFile($"ocelot.{builder.Environment.EnvironmentName}.json", optional: false, reloadOnChange: true);
 
 builder.Services.AddAuthentication(options =>
 {
