@@ -1,4 +1,4 @@
-name: .NET Build N Test VideoLib
+name: VideoStreamer   Build Test N Publish 
 
 on:
   push:
