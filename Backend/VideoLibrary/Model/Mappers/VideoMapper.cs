@@ -6,5 +6,7 @@ namespace OpenVisStreamer.VideoLibrary.Model.Mappers;
 [Mapper]
 public partial class VideoMapper
 {
-    public partial VideoDTO VideoToVideoDto(Video video);
+    
+
+    public partial VideoDTO? VideoToVideoDto(Video video);
 }

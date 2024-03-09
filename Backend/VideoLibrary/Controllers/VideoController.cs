@@ -27,7 +27,7 @@ public class VideoController(VideoService _videoService) : ControllerBase
     public async Task<ActionResult<VideoDTO>> GetVideoById(Guid id)
     {
         var video = await _videoService.GetVideoById(id);
-        if (video == null)
+        if (video is null)
         {
             return NotFound();
         }

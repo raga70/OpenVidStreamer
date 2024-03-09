@@ -5,6 +5,7 @@ using OpenVisStreamer.VideoLibrary;
 using RecommendationAlgo.MessageConsumers;
 using RecommendationAlgo.Repository;
 using RecommendationAlgo.Repository.EFC;
+using Microsoft.EntityFrameworkCore.Design;
 
 var builder = WebApplication.CreateBuilder(args);
 

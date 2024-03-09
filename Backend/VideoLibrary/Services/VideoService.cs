@@ -20,9 +20,12 @@ public class VideoService
     }
     
     
-    public async Task<VideoDTO> GetVideoById(Guid videoId)
+    public async Task<VideoDTO?> GetVideoById(Guid videoId)
     {
         var video = await _videoRepository.GetVideoById(videoId);
+        if (video is null)
+            return null;
+        
         return _videoMapper.VideoToVideoDto(video);
     }
 

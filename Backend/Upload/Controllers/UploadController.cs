@@ -18,9 +18,9 @@ public class UploadController(UploadService uploadService) :ControllerBase
     /// <returns></returns>
     [HttpPost("upload")]
     public async Task<IActionResult> UploadVideoWithMetadata(
-        [FromForm] string videoMetadata, 
-        [FromForm] IFormFile videoFile, 
-        [FromForm] IFormFile thumbnailFile)
+       [FromForm] string videoMetadata, 
+         IFormFile videoFile, 
+         IFormFile thumbnailFile)
     {
 
         var accId = AccIdExtractorFromHttpContext.GetAccId(HttpContext);
