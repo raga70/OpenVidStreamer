@@ -37,7 +37,7 @@ jobs:
       uses: docker/build-push-action@v2
       if: success()
       with:
-        context: .
+        context: ./Backend/
         file: Backend/Upload/Dockerfile
         push: true
         tags: openvidstreamer/upload:latest
