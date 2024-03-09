@@ -26,6 +26,8 @@ jobs:
       run: dotnet restore Backend/Tests/Account.Test/Account.Test.csproj
     - name: Build Account project
       run: dotnet build Backend/Account/Account.csproj --no-restore
+    - name: List test assembly path
+      run: ls -la Backend/Tests/Account.Test/bin/Debug/net8.0/
     - name: Run tests
       run: dotnet test Backend/Tests/Account.Test/Account.Test.csproj --no-build --verbosity normal
       

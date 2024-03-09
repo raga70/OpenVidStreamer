@@ -7,7 +7,7 @@ using Polly.Retry;
 
 namespace Account.Services;
 
-public class AccountService(DatabaseContext _accountDbContext, IConfiguration configuration)   
+public class AccountService(DatabaseContext _accountDbContext, IConfiguration configuration)    
 {
     private readonly AsyncRetryPolicy _dbRetryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(10));
     
