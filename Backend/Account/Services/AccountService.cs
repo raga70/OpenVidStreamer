@@ -11,7 +11,7 @@ public class AccountService(DatabaseContext _accountDbContext, IConfiguration co
 {
     private readonly AsyncRetryPolicy _dbRetryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(10));
     
-    public async Task<Tuple<AccountDTO,string>?> Login(LoginRequestDTO request)
+    public async Task<Tuple<AccountDTO,string>?> Login(LoginRequestDTO request) 
     {
         var account = await _accountDbContext.Accounts.FirstOrDefaultAsync(x => x.Email == request.email);
         if (account is null) return null;

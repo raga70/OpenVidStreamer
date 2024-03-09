@@ -20,11 +20,13 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
-    - name: Restore dependencies
+    -name: Restore dependencies for Account project
       run: dotnet restore Backend/Account/Account.csproj
-    - name: Build
+    - name: Restore dependencies for Account Test project
+      run: dotnet restore Backend/Tests/Account.Test/Account.Test.csproj
+    - name: Build Account project
       run: dotnet build Backend/Account/Account.csproj --no-restore
-    - name: Test
+    - name: Run tests
       run: dotnet test Backend/Tests/Account.Test/Account.Test.csproj --no-build --verbosity normal
       
     - name: Log in to DockerHub
