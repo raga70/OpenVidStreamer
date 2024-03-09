@@ -11,11 +11,12 @@ public class AccountService(DatabaseContext _accountDbContext, IConfiguration co
 {
     private readonly AsyncRetryPolicy _dbRetryPolicy = Policy.Handle<Exception>().WaitAndRetryAsync(3, i => TimeSpan.FromSeconds(10));
     
-    public async Task<AccountDTO?> Login(LoginRequestDTO request)
+    public async Task<Tuple<AccountDTO,string>?> Login(LoginRequestDTO request)
     {
         var account = await _accountDbContext.Accounts.FirstOrDefaultAsync(x => x.Email == request.email);
         if (account is null) return null;
-        return AccountMapper.AccountToAccountDto(account);
+        var authToken = AuthTokenGenerator.GenerateOwnAuthToken(account.AccId.ToString(),configuration);
+        return new Tuple<AccountDTO, string>(AccountMapper.AccountToAccountDto(account), authToken);
     }
     
     public async Task<Tuple<AccountDTO,string>> Register(RegisterRequestDTO request)

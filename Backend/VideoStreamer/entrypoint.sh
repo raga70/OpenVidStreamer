@@ -1,7 +1,7 @@
 ﻿#!/bin/bash
 
 # Mount the NFS share
-mount -t nfs $NFS_SERVER:$NFS_PATH /app/data
+mount -t nfs $NFS_SERVER:$NFS_PATH 
 
 # Check if mount was successful
 if [ $? -ne 0 ]; then

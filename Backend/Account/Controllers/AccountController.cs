@@ -12,17 +12,18 @@ public class AccountController(AccountService _accountService):ControllerBase
 
 
     [HttpPost("register")]
-    public async Task<ActionResult<AccountDTO>> Register([FromBody] RegisterRequestDTO request)
+    public async Task<OkObjectResult> Register([FromBody] RegisterRequestDTO request)
     {
-        var account = await _accountService.Register(request);
-        return Ok(account);
+        var accountNtoken = await _accountService.Register(request);
+        
+        return Ok(accountNtoken);
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AccountDTO>> Login([FromBody] LoginRequestDTO request)
+    public async Task<OkObjectResult> Login([FromBody] LoginRequestDTO request)
     {
-        var account = await _accountService.Login(request);
-        return Ok(account);
+        var accountNtoken = await _accountService.Login(request);
+        return Ok(accountNtoken);
     }
 
     [HttpGet("balance")]
