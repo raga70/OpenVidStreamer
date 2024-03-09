@@ -2,6 +2,7 @@
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
+RUN mkdir -p /app/data
 
 # Install NFS client utilities
 USER root
@@ -25,7 +26,9 @@ ENV CONSUL_IP=consul-service
 
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY entrypoint.sh /entrypoint.sh
+COPY VideoStreamer/entrypoint.sh /entrypoint.sh
+USER root
 RUN chmod +x /entrypoint.sh
+USER $APP_UID
 
-ENTRYPOINT ["/entrypoint.sh"]
+ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]

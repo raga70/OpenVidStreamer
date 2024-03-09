@@ -3,6 +3,7 @@ USER $APP_UID
 WORKDIR /app
 EXPOSE 8080
 EXPOSE 8081
+RUN mkdir -p /app/data
 
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
@@ -23,7 +24,9 @@ ENV CONSUL_IP=consul-service
 WORKDIR /app
 COPY --from=publish /app/publish .
 COPY Upload/entrypoint.sh /entrypoint.sh
+USER root
 RUN chmod +x /entrypoint.sh
+USER $APP_UID
+ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
 
-ENTRYPOINT ["/entrypoint.sh"]
 

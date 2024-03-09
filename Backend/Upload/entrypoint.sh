@@ -1,4 +1,4 @@
-﻿#!/bin/bash
+﻿#!/bin/sh
 
 # Mount the NFS share
 mount -t nfs $NFS_SERVER:$NFS_PATH /app/data
