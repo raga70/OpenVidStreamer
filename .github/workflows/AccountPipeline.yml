@@ -20,7 +20,7 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
-    -name: Restore dependencies for Account project
+    - name: Restore dependencies for Account project
       run: dotnet restore Backend/Account/Account.csproj
     - name: Restore dependencies for Account Test project
       run: dotnet restore Backend/Tests/Account.Test/Account.Test.csproj
