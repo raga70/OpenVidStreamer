@@ -22,7 +22,7 @@ ENV CONSUL_IP=consul-service
 
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY entrypoint.sh /entrypoint.sh
+COPY Upload/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ENTRYPOINT ["/entrypoint.sh"]
