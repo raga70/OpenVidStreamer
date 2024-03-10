@@ -28,7 +28,7 @@ ENV CONSUL_IP=consul-service
 
 WORKDIR /app
 COPY --from=publish /app/publish .
-COPY entrypoint.sh /entrypoint.sh
+COPY Render/entrypoint.sh /entrypoint.sh
 USER root
 RUN chmod +x /entrypoint.sh
 USER $APP_UID
