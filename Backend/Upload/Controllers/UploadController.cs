@@ -19,12 +19,12 @@ public class UploadController(UploadService uploadService) :ControllerBase
     [HttpPost("upload")]
     public async Task<IActionResult> UploadVideoWithMetadata(
        [FromForm] string videoMetadata, 
-         IFormFile videoFile, 
-         IFormFile thumbnailFile)
+       [FromForm]  IFormFile videoFile, 
+       [FromForm]   IFormFile thumbnailFile)
     {
 
-        var accId = AccIdExtractorFromHttpContext.GetAccId(HttpContext);
-        
+       // var accId = AccIdExtractorFromHttpContext.GetAccId(HttpContext);
+       var accId = Guid.NewGuid().ToString();//todo: remove this line and uncomment the line above (used for testing without auth and api gateway)
         
         if (videoFile == null || videoFile.Length == 0)
         {

@@ -6,23 +6,24 @@ using Upload.Model.DTO;
 
 namespace Upload.Services;
 
-public class UploadService(IConfiguration configuration, IBus bus)
+public class UploadService(IConfiguration configuration, IBus bus, IPublishEndpoint publishEndpoint)
 {
     private readonly char _pathSepator = Path.DirectorySeparatorChar;
 
-    private readonly IRequestClient<UploadVideoRequest> _VideoUploadRequestClient = bus.CreateRequestClient<UploadVideoRequest>();
-    private readonly IRequestClient<RenderVideoRequest> _RenderVideoRequestClient = bus.CreateRequestClient<RenderVideoRequest>();
-    
+   // private readonly IRequestClient<UploadVideoRequest> _VideoUploadRequestClient = bus.CreateRequestClient<UploadVideoRequest>();
+   // private readonly IRequestClient<RenderVideoRequest> _RenderVideoRequestClient = bus.CreateRequestClient<RenderVideoRequest>();
+    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
+   
     public async Task UploadVideo(VideoUploadDTO videoMetadata, IFormFile videoFile, IFormFile thumbnailFile, string accId)
     {
         Guid newVideoId = Guid.NewGuid();
         var baseNFSpath = configuration.GetValue<string>("PVstorageBucketPath");
         var todayFolder = DateTime.Now.ToString("yyyyMMdd");
 
-        if (!Directory.Exists(baseNFSpath + todayFolder))
-        {
-            Directory.CreateDirectory(baseNFSpath + todayFolder);
-        }
+        // if (!Directory.Exists(baseNFSpath + todayFolder))
+        // {
+        //     Directory.CreateDirectory(baseNFSpath + todayFolder);
+        // }
 
         Directory.CreateDirectory(baseNFSpath + _pathSepator + todayFolder + _pathSepator + newVideoId);
 
@@ -58,11 +59,12 @@ public class UploadService(IConfiguration configuration, IBus bus)
             UploadDateTime = DateTime.Now,
             IsPublic = false
         };
-        _VideoUploadRequestClient.Create(video);
-        _RenderVideoRequestClient.Create(new RenderVideoRequest() { VideoId = newVideoId, VideoUri = nonRenderedVideoPath });
-     
+        await _publishEndpoint.Publish<UploadVideoRequest>(video);
+        await _publishEndpoint.Publish<RenderVideoRequest>(new RenderVideoRequest() { VideoId = newVideoId, VideoUri = nonRenderedVideoPath });
+     //   _VideoUploadRequestClient.Create(video);
+     //   _RenderVideoRequestClient.Create(new RenderVideoRequest() { VideoId = newVideoId, VideoUri = nonRenderedVideoPath });
+        
         //todo: call account service to reward the user
-
     }
 
   

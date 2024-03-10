@@ -1,6 +1,7 @@
 using MassTransit;
 using Render;
 using Render.MessageConsumers;
+using Render.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();
+builder.Services.AddScoped<RenderService>();
 builder.Services.AddMassTransit(busConfigurator =>
 {
     busConfigurator.SetKebabCaseEndpointNameFormatter();

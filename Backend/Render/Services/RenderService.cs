@@ -4,14 +4,15 @@ using MassTransit;
 
 namespace Render.Services;
 
-public class RenderService(IBus bus)
+public class RenderService(IBus bus, IPublishEndpoint publishEndpoint)
 {
-    private readonly IRequestClient<UpdateVideoToPublicRequest> _UpdateVideoToPublicRequestClient= bus.CreateRequestClient<UpdateVideoToPublicRequest>();
+    private readonly IPublishEndpoint _publishEndpoint = publishEndpoint;
+   // private readonly IRequestClient<UpdateVideoToPublicRequest> _UpdateVideoToPublicRequestClient= bus.CreateRequestClient<UpdateVideoToPublicRequest>();
    public async Task RenderVideo(Guid videoId, string videoPath)
     {
       
-        string videoDirectory = videoPath.Replace($"playlist.m3u8", "notRendered.unknown");
-        Directory.CreateDirectory(videoDirectory); // Ensure the output directory exists
+        string videoDirectory = videoPath.Replace("notRendered.unknown","");
+       // Directory.CreateDirectory(videoDirectory); // Ensure the output directory exists
 
        
       //  string hlsSegmentFilename = Path.Combine(videoDirectory, "output_%03d.ts");
@@ -48,7 +49,9 @@ public class RenderService(IBus bus)
             {
                 Console.WriteLine($"Video:{videoId} converted to HLS successfully.");
 
-                _UpdateVideoToPublicRequestClient.Create(new UpdateVideoToPublicRequest() { VideoId = videoId });
+                _publishEndpoint.Publish<UpdateVideoToPublicRequest>(
+                    new UpdateVideoToPublicRequest() { VideoId = videoId });
+                //_UpdateVideoToPublicRequestClient.Create(new UpdateVideoToPublicRequest() { VideoId = videoId });
             }
             else
             {
