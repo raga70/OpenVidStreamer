@@ -20,7 +20,7 @@ public class AccountService(DatabaseContext _accountDbContext, IConfiguration co
         var authToken = AuthTokenGenerator.GenerateOwnAuthToken(account.AccId.ToString(),configuration);
         return new Tuple<AccountDTO, string>(AccountMapper.AccountToAccountDto(account), authToken);
     }
-    
+     
     public async Task<Tuple<AccountDTO,string>> Register(RegisterRequestDTO request)
     {
         

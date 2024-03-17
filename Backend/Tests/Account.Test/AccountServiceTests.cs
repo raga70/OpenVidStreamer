@@ -38,9 +38,10 @@ public class AccountServiceTests
     [Fact]
     public async Task Login_ReturnsAccountDto_WhenEmailExists()
     {
+        var hashedPass= BCrypt.Net.BCrypt.HashPassword("VerySecurePassword");
         // Arrange
-        var loginRequest = new LoginRequestDTO { email = "test@test.com" };
-        _dbContext.Accounts.Add(new Account.Repository.Entities.Account { Email = "test@test.com", PasswordHashed = "hashedPassword" });
+        var loginRequest = new LoginRequestDTO { email = "test@test.com" , passwordUnhashed = "VerySecurePassword"};
+        _dbContext.Accounts.Add(new Account.Repository.Entities.Account { Email = "test@test.com", PasswordHashed = hashedPass });
         await _dbContext.SaveChangesAsync();
 
         // Act
