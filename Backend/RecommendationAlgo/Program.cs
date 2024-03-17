@@ -26,6 +26,7 @@ builder.Services.AddMassTransit(busConfigurator =>
     busConfigurator.AddConsumer<VideoMetadataConsumer>();
     busConfigurator.AddConsumer<DeleteUserRequestConsumer>();
     busConfigurator.AddConsumer<DeleteVideoRequestConsumer>();
+    busConfigurator.AddConsumer<HotVideoRequestConsumer>();
     
     
     busConfigurator.UsingRabbitMq((context, configurator) =>

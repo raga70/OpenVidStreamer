@@ -19,12 +19,7 @@ public class UploadService(IConfiguration configuration, IBus bus, IPublishEndpo
         Guid newVideoId = Guid.NewGuid();
         var baseNFSpath = configuration.GetValue<string>("PVstorageBucketPath");
         var todayFolder = DateTime.Now.ToString("yyyyMMdd");
-
-        // if (!Directory.Exists(baseNFSpath + todayFolder))
-        // {
-        //     Directory.CreateDirectory(baseNFSpath + todayFolder);
-        // }
-
+        
         Directory.CreateDirectory(baseNFSpath + _pathSepator + todayFolder + _pathSepator + newVideoId);
 
         var videoDirectory = Path.Combine(baseNFSpath + _pathSepator + todayFolder + _pathSepator + newVideoId);
@@ -46,7 +41,7 @@ public class UploadService(IConfiguration configuration, IBus bus, IPublishEndpo
         ConvertThumbnailToJpg(thumbnailPath, videoDirectory);
         
         
-        //construct the videoDTO object
+
         UploadVideoRequest video = new UploadVideoRequest()
         {
             VideoId = newVideoId,
@@ -61,8 +56,7 @@ public class UploadService(IConfiguration configuration, IBus bus, IPublishEndpo
         };
         await _publishEndpoint.Publish<UploadVideoRequest>(video);
         await _publishEndpoint.Publish<RenderVideoRequest>(new RenderVideoRequest() { VideoId = newVideoId, VideoUri = nonRenderedVideoPath });
-     //   _VideoUploadRequestClient.Create(video);
-     //   _RenderVideoRequestClient.Create(new RenderVideoRequest() { VideoId = newVideoId, VideoUri = nonRenderedVideoPath });
+    
         
         //todo: call account service to reward the user
     }

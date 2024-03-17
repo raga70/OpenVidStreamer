@@ -16,7 +16,8 @@ public class VideoStatsController(RecommendationRepository _repo) : ControllerBa
     [HttpPost("likeVideo")]
     public async Task<ActionResult> LikeVideo([FromBody]  Guid videoId)
     {
-       var accId = Common.AccIdExtractorFromHttpContext.GetAccId(HttpContext);
+       HttpContext.Request.Headers.TryGetValue("Authorization", out var token);
+        var accId = Common.AccIdExtractorFromHttpContext.ExtractAccIdUpnFromJwtToken(token);
         await _repo.LikeVideo(new Guid(accId), videoId);
         return Ok();
     }
@@ -24,9 +25,25 @@ public class VideoStatsController(RecommendationRepository _repo) : ControllerBa
     [HttpPost("dislikeVideo")]
     public async Task<ActionResult> DislikeVideo([FromBody]  Guid videoId)
     {
-        var accId = Common.AccIdExtractorFromHttpContext.GetAccId(HttpContext);
+     
+        HttpContext.Request.Headers.TryGetValue("Authorization", out var token);
+        var accId = Common.AccIdExtractorFromHttpContext.ExtractAccIdUpnFromJwtToken(token);
        await _repo.DislikeVideo(new Guid(accId), videoId);
         return Ok();
     }
+    
+    [HttpGet("preferedCategory")]
+    public async Task<ActionResult<List<VideoStats>>> GetPreferedCategory([FromQuery] int topN)
+    {
+        HttpContext.Request.Headers.TryGetValue("Authorization", out var token);
+        var accId = Common.AccIdExtractorFromHttpContext.ExtractAccIdUpnFromJwtToken(token);
+        return Ok(await _repo.GetUserPreferredCategories(new Guid(accId),topN));
+    }
+    
+    
+    
+        
+    
+    
     
 }

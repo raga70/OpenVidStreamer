@@ -18,7 +18,8 @@ namespace Account.Controllers
         [HttpPost("processPayment")]
         public async Task<IActionResult> ProcessPayment([FromBody] IncomingPaymentDTO incomingPayment)
         {
-            var accId = Common.AccIdExtractorFromHttpContext.GetAccId(HttpContext);
+            HttpContext.Request.Headers.TryGetValue("Authorization", out var token);
+        var accId = Common.AccIdExtractorFromHttpContext.ExtractAccIdUpnFromJwtToken(token);
             var charge = await _paymentService.ProcessPaymentAsync(incomingPayment, accId);
             if (charge.Status == "succeeded")
             {

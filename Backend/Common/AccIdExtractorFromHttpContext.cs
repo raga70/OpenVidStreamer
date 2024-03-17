@@ -1,4 +1,5 @@
-﻿using Microsoft.CSharp.RuntimeBinder;
+﻿using System.IdentityModel.Tokens.Jwt;
+using Microsoft.CSharp.RuntimeBinder;
 
 namespace Common;
 using System;
@@ -8,36 +9,39 @@ using System.Security.Claims;
 
 public class AccIdExtractorFromHttpContext
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="httpContext">ofType(HttpContext) </param>
-    /// <returns></returns>
-    public static string GetAccId(dynamic httpContext) //the class library doesnt have the HttpContext from ASP.NET class so we use dynamic
+
+
+
+    
+    
+    
+    public static string ExtractAccIdUpnFromJwtToken(string jwtToken)
     {
-        try
+        //extracr Bearer from the token if it is present
+        if (jwtToken.StartsWith("Bearer "))
         {
-            // Attempt to dynamically access the Claims
-            var userClaims = httpContext?.User?.Claims as IEnumerable<Claim>;
-            if (userClaims != null)
-            {
-                var claim = userClaims
-                    .FirstOrDefault(claim => claim.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn");
+            jwtToken = jwtToken.Substring(7);
+        }
+        var handler = new JwtSecurityTokenHandler();
+        var jsonToken = handler.ReadToken(jwtToken);
+        var tokenS = handler.ReadToken(jwtToken) as JwtSecurityToken;
 
-                return claim?.Value ?? "unknownAuthenticatedUser";
-            }
-        }
-        catch (RuntimeBinderException)
+        if (tokenS == null)
         {
-            // Handle cases where dynamic invocation fails due to missing members
-            Console.WriteLine("Error accessing properties on dynamic type.");
-        }
-        catch (Exception ex)
-        {
-            // General exception handling
-            Console.WriteLine($"An error occurred: {ex.Message}");
+            throw new ArgumentException("Invalid JWT token");
         }
 
-        return "unknownAuthenticatedUser";
+        // Attempt to extract the UPN claim; the claim type might vary
+        // Commonly, the UPN can be under "upn", "email", or another claim, depending on the token issuer
+        var upnClaim = tokenS.Claims.FirstOrDefault(claim => claim.Type == "upn");
+
+        if (upnClaim == null)
+        {
+            throw new InvalidOperationException("UPN claim not found in the JWT token");
+        }
+
+        return upnClaim.Value;
     }
+    
+    
 }

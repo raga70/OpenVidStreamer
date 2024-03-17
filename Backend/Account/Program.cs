@@ -20,6 +20,9 @@ builder.Services.AddScoped<StripePaymentService>();
 builder.Services.AddHealthChecks();
 
 var app = builder.Build();
+
+app.UseCors(builder => builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

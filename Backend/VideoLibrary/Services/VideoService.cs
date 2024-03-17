@@ -9,13 +9,15 @@ namespace OpenVisStreamer.VideoLibrary.Services;
 
 public class VideoService
 {
-    private readonly IRequestClient<RecommendationVideoRequest> _VideoRecommendationsRequestClient;
+    private readonly IRequestClient<RecommendationVideoRequest> _videoRecommendationsRequestClient;
+    private readonly IRequestClient<HotVideoRequest> _hotVideoRequestClient;
     private readonly VideoMapper _videoMapper = new();
     private readonly VideoRepository _videoRepository;
     
     public VideoService(VideoRepository videoRepository, IBus bus)
     {
-        _VideoRecommendationsRequestClient = bus.CreateRequestClient<RecommendationVideoRequest>();
+        _videoRecommendationsRequestClient = bus.CreateRequestClient<RecommendationVideoRequest>();
+        _hotVideoRequestClient = bus.CreateRequestClient<HotVideoRequest>();
         _videoRepository = videoRepository;
     }
     
@@ -32,7 +34,7 @@ public class VideoService
 
     public async Task<List<VideoDTO>> GetRecommendedVideos(Guid userId,VideoCategory category,int topN )
     {
-        var videoRecommendationsResponse = await _VideoRecommendationsRequestClient.GetResponse<RecommendationVideoResponse>(new
+        var videoRecommendationsResponse = await _videoRecommendationsRequestClient.GetResponse<RecommendationVideoResponse>(new
         {
             UserId = userId,
             Category = category,
@@ -41,5 +43,17 @@ public class VideoService
         var videos = await _videoRepository.GetVideosByVideoIds(videoRecommendationsResponse.Message.VideoIds);
         return videos.Select(_videoMapper.VideoToVideoDto).ToList();
     }
-    
+
+    public async Task<List<VideoDTO>> GetHotVideos(int topN)
+    {
+        var videoRecommendationsResponse = await _hotVideoRequestClient.GetResponse<HotVideoResponse>(new
+        {
+            TopN = topN
+        });
+        
+        var videos = await _videoRepository.GetVideosByVideoIds(videoRecommendationsResponse.Message.VideoIds);
+        return videos.Select(_videoMapper.VideoToVideoDto).ToList();
+        
+        
+    }
 }

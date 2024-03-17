@@ -15,11 +15,12 @@ public class VideoController(VideoService _videoService) : ControllerBase
     /// <param name="category">if it`s not provided it will give general recommendations</param>
     /// <returns></returns>
     [HttpGet("recommendedVideos")]
-    public async Task<ActionResult<List<VideoDTO>>> GetRecommendedVideos(VideoCategory category,int topN = 20)
+    public async Task<ActionResult<List<VideoDTO>>> GetRecommendedVideos([FromQuery]VideoCategory category,[FromQuery]int topN = 20)
     {
-        var userId = Common.AccIdExtractorFromHttpContext.GetAccId(HttpContext);
+        HttpContext.Request.Headers.TryGetValue("Authorization", out var token);
+        var accId = Common.AccIdExtractorFromHttpContext.ExtractAccIdUpnFromJwtToken(token);
         
-        var videos = await _videoService.GetRecommendedVideos(new Guid(userId),category,topN);
+        var videos = await _videoService.GetRecommendedVideos(new Guid(accId),category,topN);
         return Ok(videos);
     }
     
@@ -35,7 +36,14 @@ public class VideoController(VideoService _videoService) : ControllerBase
     }
 
     
-    
+    [HttpGet("hotVideos")]
+    public async Task<ActionResult<List<VideoDTO>>> GetHotVideos([FromQuery]int topN = 20)
+    {
+        var videos = await _videoService.GetHotVideos(topN);
+        
+        
+        return Ok(videos);
+    }
     
     
 }

@@ -1,6 +1,7 @@
 ﻿using Account.Model.DTO;
 using Account.Services;
 using Microsoft.AspNetCore.Mvc;
+using OpenVisStreamer.VideoLibrary.Exceptions;
 
 namespace Account.Controllers;
 
@@ -12,9 +13,18 @@ public class AccountController(AccountService _accountService):ControllerBase
 
 
     [HttpPost("register")]
-    public async Task<OkObjectResult> Register([FromBody] RegisterRequestDTO request)
+    public async Task<IActionResult> Register([FromBody] RegisterRequestDTO request)
     {
-        var accountNtoken = await _accountService.Register(request);
+        Tuple<AccountDTO, string> accountNtoken;
+        try
+        {
+         accountNtoken = await _accountService.Register(request);
+
+        }
+        catch (EmailAlreadyInUseException e)
+        {
+            return StatusCode(442);
+        }
         
         return Ok(accountNtoken);
     }
@@ -29,7 +39,8 @@ public class AccountController(AccountService _accountService):ControllerBase
     [HttpGet("balance")]
     public async Task<ActionResult<decimal>> GetBalance()
     {
-        var accId= Common.AccIdExtractorFromHttpContext.GetAccId(HttpContext);
+        HttpContext.Request.Headers.TryGetValue("Authorization", out var token);
+        var accId = Common.AccIdExtractorFromHttpContext.ExtractAccIdUpnFromJwtToken(token);
         var balance = await _accountService.GetBalance(new Guid(accId));
         return Ok(balance);
     }
@@ -38,7 +49,8 @@ public class AccountController(AccountService _accountService):ControllerBase
     [HttpPost("activateSubscription")]
     public async Task<ActionResult<AccountDTO>> ActivateSubscription()
     {
-        var accId= Common.AccIdExtractorFromHttpContext.GetAccId(HttpContext);
+        HttpContext.Request.Headers.TryGetValue("Authorization", out var token);
+        var accId = Common.AccIdExtractorFromHttpContext.ExtractAccIdUpnFromJwtToken(token);
         var account = await _accountService.ActivateSubscription(new Guid(accId));
         return Ok(account);
     }

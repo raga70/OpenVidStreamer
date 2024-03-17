@@ -22,7 +22,7 @@
         <PackageReference Include="Riok.Mapperly" Version="3.4.0" />
         <PackageReference Include="Stripe.net" Version="43.17.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.1.2" />
+        <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.4.0" />
     </ItemGroup>
 
     <ItemGroup>

@@ -6,8 +6,10 @@
       "UpstreamPathTemplate": "/videolib/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "ServiceName": "OpenVisStreamer.VideoLibrary",
-      
-      
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+        "AllowedScopes": []
+      },
       "UseServiceDiscovery": true,
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -19,6 +21,41 @@
       }
     },
     {
+      "Priority": 1,
+      "DownstreamPathTemplate": "/login",
+      "DownstreamScheme": "https",
+      "UpstreamPathTemplate": "/account/login",
+      "UpstreamHttpMethod": ["Get", "Post"],
+      "ServiceName": "OpenVisStreamer.Account",
+      "UseServiceDiscovery": true,
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "ServiceDiscoveryProvider": {
+        "Host": "localhost",
+        "Port": 8500,
+        "Type": "Consul"
+      }
+    },
+    {
+      "Priority": 1,
+      "DownstreamPathTemplate": "/register",
+      "DownstreamScheme": "https",
+      "UpstreamPathTemplate": "/account/register",
+      "UpstreamHttpMethod": ["Get", "Post"],
+      "ServiceName": "OpenVisStreamer.Account",
+      "UseServiceDiscovery": true,
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "ServiceDiscoveryProvider": {
+        "Host": "localhost",
+        "Port": 8500,
+        "Type": "Consul"
+      }
+    },
+    {
+      "Priority": 0,
       "DownstreamPathTemplate": "/{everything}",
       "DownstreamScheme": "https",
       "UpstreamPathTemplate": "/account/{everything}",
@@ -26,6 +63,7 @@
       "ServiceName": "OpenVisStreamer.Account",
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
+        
         "AllowedScopes": []
       },
       "UseServiceDiscovery": true,
@@ -125,5 +163,70 @@
       "Port": 8500,
       "Type": "Consul"
     }
-  }
+  },
+  "SwaggerEndPoints": [
+    {
+      "Key": "videolib",
+      "Config": [
+        {
+          "Name": "Video Library",
+          "Version": "v1",
+          "Service": {
+            "Name": "OpenVisStreamer.VideoLibrary",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
+    },
+    {
+      "Key": "account",
+      "Config": [
+        {
+          "Name": "Account Service",
+          "Version": "v1",
+          "Url": "https://localhost:7176/account/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "recommendationAlgo",
+      "Config": [
+        {
+          "Name": "Recommendation Algorithm",
+          "Version": "v1",
+          "Url": "https://localhost:7176/recommendationAlgo/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "render",
+      "Config": [
+        {
+          "Name": "Render Service",
+          "Version": "v1",
+          "Url": "https://localhost:7176/render/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "upload",
+      "Config": [
+        {
+          "Name": "Upload Service",
+          "Version": "v1",
+          "Url": "https://localhost:7176/upload/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "streamer",
+      "Config": [
+        {
+          "Name": "Streamer Service",
+          "Version": "v1",
+          "Url": "https://localhost:7176/streamer/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
 }

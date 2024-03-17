@@ -2,6 +2,7 @@
 using Account.Model.Mappers;
 using Account.Repository.EFC;
 using Microsoft.EntityFrameworkCore;
+using OpenVisStreamer.VideoLibrary.Exceptions;
 using Polly;
 using Polly.Retry;
 
@@ -15,12 +16,18 @@ public class AccountService(DatabaseContext _accountDbContext, IConfiguration co
     { 
         var account = await _accountDbContext.Accounts.FirstOrDefaultAsync(x => x.Email == request.email);
         if (account is null) return null;
+        if (!BCrypt.Net.BCrypt.Verify(request.passwordUnhashed, account.PasswordHashed)) return null;
         var authToken = AuthTokenGenerator.GenerateOwnAuthToken(account.AccId.ToString(),configuration);
         return new Tuple<AccountDTO, string>(AccountMapper.AccountToAccountDto(account), authToken);
     }
     
     public async Task<Tuple<AccountDTO,string>> Register(RegisterRequestDTO request)
     {
+        
+        //check if email is already in use
+        var accountWithEmail = await _accountDbContext.Accounts.FirstOrDefaultAsync(x => x.Email == request.email);
+        if (accountWithEmail != null) throw new EmailAlreadyInUseException("Email already in use");
+        
         var account = new Repository.Entities.Account()
         {
         Email = request.email,
@@ -31,7 +38,8 @@ public class AccountService(DatabaseContext _accountDbContext, IConfiguration co
         var authToken = AuthTokenGenerator.GenerateOwnAuthToken(account.AccId.ToString(),configuration);
         var accountDto = AccountMapper.AccountToAccountDto(account);
       
-        Task.Run(() => _dbRetryPolicy.ExecuteAsync(async () => await _accountDbContext.SaveChangesAsync()));
+        await _accountDbContext.SaveChangesAsync();
+     //   Task.Run(() => _dbRetryPolicy.ExecuteAsync(async () => await _accountDbContext.SaveChangesAsync()));
         
         return new Tuple<AccountDTO, string>(accountDto, authToken);
     }
