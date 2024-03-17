@@ -42,7 +42,7 @@ public class AccountService(DatabaseContext _accountDbContext, IConfiguration co
      //   Task.Run(() => _dbRetryPolicy.ExecuteAsync(async () => await _accountDbContext.SaveChangesAsync()));
         
         return new Tuple<AccountDTO, string>(accountDto, authToken);
-    }
+    } 
     
     public async Task<decimal> GetBalance(Guid accId)
     {
