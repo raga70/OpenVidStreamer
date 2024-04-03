@@ -12,11 +12,11 @@ COPY ["RecomendationAlgo/RecomendationAlgo.csproj", "RecomendationAlgo/"]
 RUN dotnet restore "RecomendationAlgo/RecomendationAlgo.csproj"
 COPY . .
 WORKDIR "/src/RecomendationAlgo"
-RUN dotnet build "RecomendationAlgo.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "RecommendationAlgo.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "RecomendationAlgo.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "RecommendationAlgo.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 ENV CONSUL_IP=consul-service
