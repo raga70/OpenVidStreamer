@@ -44,15 +44,19 @@ namespace OpenVisStreamer.VideoLibrary.Repository
         
      
         
-        public async Task UpdateVideoToPublic(Guid videoId)
+        public async Task<Video?> UpdateVideoToPublic(Guid videoId, decimal videoLength)
         {
             var video = await context.Videos.FindAsync(videoId);
             if (video != null)
             {
                 video.IsPublic = true;
+                video.videoLength = videoLength;
                 context.Videos.Update(video);
                 await context.SaveChangesAsync();
             }
+
+            return video;
+
         }
         
     }

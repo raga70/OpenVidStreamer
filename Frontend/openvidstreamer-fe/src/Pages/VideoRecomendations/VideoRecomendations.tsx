@@ -6,7 +6,7 @@ import {VideoCategory} from "../../Model/VideoUploadDTO.ts";
 import {Video} from "../../Model/Video.ts";
 import {useStoreState} from "../../../persistenceProvider.ts";
 import toast from "react-hot-toast";
-import * as http2 from "http2";
+import {useNavigate} from "react-router-dom";
 
 // Mock fetch function to simulate fetching data from the backend
 
@@ -21,6 +21,7 @@ const styles = {
         padding: '20px',
     },
     videoItem: {
+        cursor: 'pointer',
         color: '#333',
         width: '300px',
         boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
@@ -66,29 +67,63 @@ const truncateDescription = (description: string) => {
 };
 
 // VideoItem component for rendering individual video details
-const VideoItem = ({video}) => (
-    <div style={styles.videoItem}>
-        <img src={video.thumbnailUri} alt={video.title} style={styles.videoThumbnail}/>
-        <div style={styles.videoContent}>
-            <h3 style={styles.videoTitle}>{video.title}</h3>
-            <p style={styles.videoDescription}>{truncateDescription(video.description)}</p>
-            <div style={{display: "flex", justifyContent: "space-between"}}>
-                <div
-                    style={styles.videoUploadDate}>Uploaded: {new Date(video.uploadDateTime).toLocaleDateString()}</div>
-                <div style={styles.videoStats}>
-                    <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
-                        <div style={{display: "flex"}}>
-                            <BiSolidLike/><BiSolidDislike/>
-                        </div>
-                        <div>
-                            {video.totalLikes}/{video.totalDislikes}
+const VideoItem = ({video}) => {
+    const authToken = useStoreState("authToken");
+    const navigate = useNavigate();
+    const [thumbnailFile, setThumbnailFile] = useState();
+    const fetchThumbnail = async () => {
+        try {
+            const response = await axios.get(ApiServerBaseUrl() + '/streamer/videos/' + video.thumbnailUri, {
+                headers: {
+                    Authorization: `Bearer ${authToken}`
+                },
+                responseType: 'blob'
+            });
+            console.log(response.data);
+            const url = URL.createObjectURL(response.data);
+            setThumbnailFile(url);
+
+        } catch (error) {
+            toast.error('Failed to fetch video thumbnail');
+            return '';
+        }
+    }
+    useEffect(() => {
+        fetchThumbnail()
+    }, []);
+    
+    
+    const handleVideoClick = () => {
+        navigate('/video-player', { state: { video } });
+    }
+    
+    
+
+    return (
+
+        <div onClick={handleVideoClick} style={styles.videoItem}>
+            <img src={thumbnailFile} alt={video.title} style={styles.videoThumbnail}/>
+            <div style={styles.videoContent}>
+                <h3 style={styles.videoTitle}>{video.title}</h3>
+                <p style={styles.videoDescription}>{truncateDescription(video.description)}</p>
+                <div style={{display: "flex", justifyContent: "space-between"}}>
+                    <div
+                        style={styles.videoUploadDate}>Uploaded: {new Date(video.uploadDateTime).toLocaleDateString()}</div>
+                    <div style={styles.videoStats}>
+                        <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
+                            <div style={{display: "flex"}}>
+                                <BiSolidLike/><BiSolidDislike/>
+                            </div>
+                            <div>
+                                {video.totalLikes}/{video.totalDislikes}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-);
+    )
+};
 
 // VideoList component for rendering the list of videos
 const VideoListCarosel = ({categoryName, isHotVideos}) => {
@@ -114,7 +149,7 @@ const VideoListCarosel = ({categoryName, isHotVideos}) => {
         }
     };
 
-    
+
     const fetchHotVideos = async (topN = 20): Promise<Video[]> => {
         try {
             const response = await axios.get(ApiServerBaseUrl() + '/videolib/hotVideos', {
@@ -132,21 +167,22 @@ const VideoListCarosel = ({categoryName, isHotVideos}) => {
             return [];
         }
     }
-    
+
 
     useEffect(() => {
         if (isHotVideos) {
             fetchHotVideos().then(videos => setVideos(videos));
         } else
-        fetchRecommendedVideos(categoryName).then(videos => setVideos(videos));
+            fetchRecommendedVideos(categoryName).then(videos => setVideos(videos));
     }, []);
 
     return (
         <div>
-            {isHotVideos?<h2>HotVideos</h2> : <h2>{categoryName == VideoCategory.Other ? 'Recommended': categoryName}</h2>}
+            {isHotVideos ? <h2>HotVideos</h2> :
+                <h2>{categoryName == VideoCategory.Other ? 'Recommended' : categoryName}</h2>}
             <div style={styles.videoList}>
                 {videos.map(video => (
-                    <VideoItem key={video.videoId} video={video}/>
+                    <VideoItem  key={video.videoId} video={video}/>
                 ))}
             </div>
         </div>

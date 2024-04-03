@@ -8,13 +8,13 @@ namespace RecommendationAlgo.Controllers;
 public class VideoStatsController(RecommendationRepository _repo) : ControllerBase
 {
     [HttpGet("getVideoStatistics")]
-    public async Task<ActionResult<VideoStats>> GetVideoStats([FromBody]  Guid videoId)
+    public async Task<ActionResult<VideoStats>> GetVideoStats([FromQuery]  Guid videoId)
     {
         return Ok(await _repo.GetVideoStatistics(videoId));
     }
     
     [HttpPost("likeVideo")]
-    public async Task<ActionResult> LikeVideo([FromBody]  Guid videoId)
+    public async Task<ActionResult> LikeVideo([FromQuery]  Guid videoId)
     {
        HttpContext.Request.Headers.TryGetValue("Authorization", out var token);
         var accId = Common.AccIdExtractorFromHttpContext.ExtractAccIdUpnFromJwtToken(token);
@@ -23,7 +23,7 @@ public class VideoStatsController(RecommendationRepository _repo) : ControllerBa
     }
 
     [HttpPost("dislikeVideo")]
-    public async Task<ActionResult> DislikeVideo([FromBody]  Guid videoId)
+    public async Task<ActionResult> DislikeVideo([FromQuery]  Guid videoId)
     {
      
         HttpContext.Request.Headers.TryGetValue("Authorization", out var token);

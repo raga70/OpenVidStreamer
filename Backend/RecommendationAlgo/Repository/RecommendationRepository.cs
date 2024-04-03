@@ -38,6 +38,7 @@ public class RecommendationRepository(DatabaseContext dbContext)
         else
         {
             watchHistory.Liked = VideoLikeEnum.Disliked;
+            
         }
 
         await dbContext.SaveChangesAsync();
@@ -199,6 +200,10 @@ public class RecommendationRepository(DatabaseContext dbContext)
     /// </summary>
     public async Task<List<Guid>> GetAlgoRecommendedVideos(Guid accId, int topN)
     {
+     
+            
+        
+        
         // Find all the videos that the current user has liked
         var likedVideos = dbContext.WatchHistories.Where(w => w.UserId == accId && w.Liked == VideoLikeEnum.Liked)
             .Select(w => w.VideoId);
@@ -238,8 +243,31 @@ public class RecommendationRepository(DatabaseContext dbContext)
         });
 
         // Sort the videos by the final score in descending order and take the top N
-        var recommendedVideos = await finalQuery.OrderByDescending(v => v.FinalScore).Take(topN).Select(v => v.VideoId)
+        var recommendedVideos = await finalQuery.OrderByDescending(v => v.FinalScore).ThenByDescending(v=>v.VideoId).Take(topN).Select(v => v.VideoId)
             .ToListAsync();
+
+
+        int numberOfNewVideosToInject = 0;
+        
+        if (recommendedVideos.Count < topN) // new users dont have watch history and have 0 recommendations
+        {
+            numberOfNewVideosToInject = topN - recommendedVideos.Count;
+        }else if (recommendedVideos.Count >= topN)
+        {
+            numberOfNewVideosToInject = 5;
+            recommendedVideos.RemoveRange(recommendedVideos.Count - 5, 5);
+        }
+        var newVideos =  
+            await dbContext.VideoStats.OrderByDescending(v => v.PublishedAt).Select(v => v.VideoId).Take(numberOfNewVideosToInject).ToListAsync();
+        
+        var random = new Random();
+        for (int i = 0; i <= numberOfNewVideosToInject; i++)
+        {
+            if (i >= newVideos.Count) break;
+            var a = 1;
+            recommendedVideos.Insert(random.Next(recommendedVideos.Count), newVideos[i]);
+        }
+
 
         return recommendedVideos;
     }

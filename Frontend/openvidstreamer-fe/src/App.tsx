@@ -7,6 +7,7 @@ import HomePage from "./Pages/VideoRecomendations/HomePage.tsx";
 import {useEffect, useState} from "react";
 import {useStoreState} from "../persistenceProvider.ts";
 import {loadConfig} from "../configProvider.ts";
+import VideoPlayer from "./Pages/VideoPlayer.tsx";
 
 function App() {
 
@@ -34,6 +35,7 @@ function App() {
                         <Route path="/login" element={<LoginPageComp/>}/> {/* Updated syntax for Route */}
                         <Route path="/upload" element={<UploadPage/>}/> {/* Updated syntax for Route */}
                         <Route path="/home" element={<HomePage/>}/>
+                        <Route path="/video-player" element={<VideoPlayer />} />
                     </Routes>
                 </Router>
             }

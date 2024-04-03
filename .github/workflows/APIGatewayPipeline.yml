@@ -1,0 +1,45 @@
+name: ApiGateway   Build Test N Publish 
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'Backend/APIGateway/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'Backend/APIGateway/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 8.0.x
+    - name: Restore dependencies for APIGateway project
+      run: dotnet restore Backend/APIGateway/APIGateway.csproj
+
+    - name: Build APIGateway project
+      run: dotnet build Backend/APIGateway/APIGateway.csproj --no-restore
+
+ 
+
+      
+    - name: Log in to DockerHub
+      uses: docker/login-action@v1
+      if: success()
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v2
+      if: success()
+      with:
+        context: ./Backend/
+        file: Backend/APIGateway/Dockerfile
+        push: true
+        tags: openvidstreamer/APIGateway:latest

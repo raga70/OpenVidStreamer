@@ -1,4 +1,5 @@
 using MassTransit;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Upload;
 using Upload.Services;
 
@@ -22,6 +23,11 @@ builder.Services.AddMassTransit(busConfigurator =>
         });
         configurator.ConfigureEndpoints(context);
     });
+});
+
+builder.Services.Configure<KestrelServerOptions>(options =>
+{
+    options.Limits.MaxRequestBodySize = null; // Remove file upload limit of 30mb the limit
 });
 
 

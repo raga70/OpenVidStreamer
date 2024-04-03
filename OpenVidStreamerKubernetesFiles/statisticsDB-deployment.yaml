@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: statistics-db-deployment
+spec:
+  replicas: 1  # Ensure a single instance if it's a standalone database
+  selector:
+    matchLabels:
+      app: statistics-db
+  template:
+    metadata:
+      labels:
+        app: statistics-db
+    spec:
+      containers:
+      - name: mariadb
+        image: mariadb:11.3
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "12345"
+        - name: MYSQL_DATABASE
+          value: "StatisticsDB"
+        - name: MYSQL_USER
+          value: "admin"
+        - name: MYSQL_PASSWORD
+          value: "12345"
+        ports:
+        - containerPort: 3306

@@ -1,8 +1,10 @@
-﻿export type Video = {
+﻿import {VideoCategory} from "./VideoUploadDTO.ts";
+
+export type Video = {
     videoId: string;
     title: string;
     description: string;
-    category: number;
+    category: VideoCategory;
     videoLength: number;
     videoUri: string;
     thumbnailUri: string;
@@ -11,4 +13,7 @@
     uploadDateTime: string; 
 }
 
-
+export function getCategoryName(categoryId: number): string {
+    const categories = Object.entries(VideoCategory).map(([, value]) => value);
+    return categories[categoryId] ?? "Unknown Category";
+}

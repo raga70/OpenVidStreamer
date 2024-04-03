@@ -14,4 +14,8 @@ public class VideoStats
     [Required]
     public VideoCategory Category { get; set; } = VideoCategory.Other;
     
+    [Required]
+    public DateTime PublishedAt { get; set; } = DateTime.Now;
+    
+    
 }

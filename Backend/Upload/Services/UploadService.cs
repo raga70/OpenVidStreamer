@@ -39,7 +39,9 @@ public class UploadService(IConfiguration configuration, IBus bus, IPublishEndpo
         }
 
         ConvertThumbnailToJpg(thumbnailPath, videoDirectory);
-        
+
+      
+        var strippedVideDir = videoDirectory.Replace(baseNFSpath, "");
         
 
         UploadVideoRequest video = new UploadVideoRequest()
@@ -48,8 +50,8 @@ public class UploadService(IConfiguration configuration, IBus bus, IPublishEndpo
             Title = videoMetadata.Title,
             Description = videoMetadata.Description,
             Category = videoMetadata.Category,
-            VideoUri = videoDirectory + _pathSepator + "playlist.m3u8",
-            ThumbnailUri = videoDirectory + _pathSepator + "thumbnail.jpg",
+            VideoUri = strippedVideDir + _pathSepator + "playlist.m3u8",
+            ThumbnailUri = strippedVideDir + _pathSepator + "thumbnail.jpg",
             uploadedByAccoutId = Guid.Parse(accId),
             UploadDateTime = DateTime.Now,
             IsPublic = false

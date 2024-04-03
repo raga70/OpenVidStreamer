@@ -38,29 +38,77 @@ public class RenderService(IBus bus, IPublishEndpoint publishEndpoint)
             process.Start();
 
             // Asynchronously read the standard output and standard error
-            string output = await process.StandardOutput.ReadToEndAsync();
-            string error = await process.StandardError.ReadToEndAsync();
+            var readOutputTask = process.StandardOutput.ReadToEndAsync();
+            var readErrorTask = process.StandardError.ReadToEndAsync();
 
             process.WaitForExit();
 
-          
+            string output = await readOutputTask;
+            string error = await readErrorTask;
 
             if (process.ExitCode == 0)
             {
                 Console.WriteLine($"Video:{videoId} converted to HLS successfully.");
 
+                var videoLength = await GetVideoDurationInSeconds(hlsPlaylistPath);
+                
                 _publishEndpoint.Publish<UpdateVideoToPublicRequest>(
-                    new UpdateVideoToPublicRequest() { VideoId = videoId });
+                    new UpdateVideoToPublicRequest() { VideoId = videoId,VideoLength = videoLength});
                 //_UpdateVideoToPublicRequestClient.Create(new UpdateVideoToPublicRequest() { VideoId = videoId });
+                
+                //delete notRendered.unknown file
+                File.Delete(videoPath);
+                
             }
             else
             {
                 Console.WriteLine($"Failed to convert video:{videoId} to HLS.");
                //todo:retry with poly
+               
+               
                 
                 
                 
             }
         }
     }
+
+
+
+    public async Task<decimal> GetVideoDurationInSeconds(string playlistPath)
+    {
+        ProcessStartInfo startInfo = new ProcessStartInfo
+        {
+            FileName = "ffprobe",
+            Arguments = $"-v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 \"{playlistPath}\"",
+            UseShellExecute = false,
+            RedirectStandardOutput = true,
+            CreateNoWindow = true
+        };
+
+        using (Process process = new Process { StartInfo = startInfo })
+        {
+            process.Start();
+
+            var readOutputTask =  process.StandardOutput.ReadToEndAsync();
+            process.WaitForExit();
+                
+            string output = await readOutputTask;
+            // Trim the output to remove any leading/trailing whitespace and parse it to double
+            if (double.TryParse(output.Trim(), out double duration))
+            {
+                return Convert.ToDecimal(duration);
+            }
+            else
+            {
+                throw new InvalidOperationException("Failed to parse video duration.");
+            }
+        }
+    }
+   
+   
+   
+   
+   
+   
 }

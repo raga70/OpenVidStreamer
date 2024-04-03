@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.FileProviders;
 using VideoStreamer;
 
@@ -26,9 +27,17 @@ app.MapControllers();
 
 app.UseStaticFiles(new StaticFileOptions
 {
-    FileProvider = new PhysicalFileProvider(app.Configuration["PVstorageBucketPath"]!),
-    RequestPath = "/videos" // the folder will be available at MSurl/videos
+    FileProvider = new PhysicalFileProvider(app.Configuration["PVstorageBucketPath"]),
+    RequestPath = "/videos",
+    ServeUnknownFileTypes = true, // Caution: serving unknown file types can be a security risk
+    DefaultContentType = "application/octet-stream", // Set a default MIME type
+    ContentTypeProvider = new FileExtensionContentTypeProvider(new Dictionary<string, string>
+    {
+        { ".m3u8", "application/vnd.apple.mpegurl" },
+        // Add any other file types not recognized by default
+    })
 });
+
 
 
 ConsulRegisterer.Register(app, app.Environment, app.Lifetime, builder.Configuration);

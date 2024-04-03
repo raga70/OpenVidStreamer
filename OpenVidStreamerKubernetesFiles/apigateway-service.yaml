@@ -1,0 +1,12 @@
+﻿apiVersion: v1
+kind: Service
+metadata:
+  name: apigateway-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: apigateway
+  ports:
+    - protocol: TCP
+      port: 8081 
+      targetPort: 8081 

@@ -31,6 +31,9 @@ namespace RecommendationAlgo.Migrations
                     b.Property<int>("Category")
                         .HasColumnType("int");
 
+                    b.Property<DateTime>("PublishedAt")
+                        .HasColumnType("datetime(6)");
+
                     b.Property<decimal>("VideoLength")
                         .HasColumnType("decimal(65,30)");
 

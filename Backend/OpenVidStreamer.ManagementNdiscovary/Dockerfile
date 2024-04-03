@@ -1,5 +1,5 @@
 # Use the official Consul image as a parent image
-FROM consul:latest
+FROM consul:1.15.4
 
 # Set the working directory in the container
 WORKDIR /consul/config
