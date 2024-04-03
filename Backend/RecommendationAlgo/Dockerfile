@@ -8,10 +8,10 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["RecomendationAlgo/RecommendationAlgo.csproj", "RecomendationAlgo/"]
-RUN dotnet restore "RecomendationAlgo/RecommendationAlgo.csproj"
+COPY ["RecommendationAlgo/RecommendationAlgo.csproj", "RecomendationAlgo/"]
+RUN dotnet restore "RecommendationAlgo/RecommendationAlgo.csproj"
 COPY . .
-WORKDIR "/src/RecomendationAlgo"
+WORKDIR "/src/RecommendationAlgo"
 RUN dotnet build "RecommendationAlgo.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
@@ -22,4 +22,4 @@ FROM base AS final
 ENV CONSUL_IP=consul-service
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "RecomendationAlgo.dll"]
+ENTRYPOINT ["dotnet", "RecommendationAlgo.dll"]
