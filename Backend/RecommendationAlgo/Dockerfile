@@ -8,7 +8,7 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["RecomendationAlgo/RecomendationAlgo.csproj", "RecomendationAlgo/"]
+COPY ["RecomendationAlgo/RecommendationAlgo.csproj", "RecomendationAlgo/"]
 RUN dotnet restore "RecomendationAlgo/RecommendationAlgo.csproj"
 COPY . .
 WORKDIR "/src/RecomendationAlgo"
