@@ -1,45 +1,37 @@
-﻿# Use Ubuntu as the base for the custom .NET environment
-FROM ubuntu:20.04 AS base
-
-# Install .NET dependencies, NFS support, and other essential tools
-RUN apt-get update && apt-get install -y \
-    software-properties-common \
-    nfs-common \
-     wget \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install Microsoft package signing key and repository
-RUN wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb \
-    && dpkg -i packages-microsoft-prod.deb \
-    && rm packages-microsoft-prod.deb
-
-# Install .NET SDK and Runtime
-RUN apt-get update && \
-    apt-get install -y apt-transport-https && \
-    apt-get update && \
-    apt-get install -y dotnet-sdk-8.0 dotnet-runtime-8.0
-
-ENV APP_UID=1000
-
+﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 USER $APP_UID
-
 WORKDIR /app
-
 EXPOSE 8080
 EXPOSE 8081
-
 RUN mkdir -p /app/data
 
-# Copy the rest of your application's code and follow the same build steps as before
-COPY . /app
+USER root
+RUN apt-get update && apt-get install -y nfs-common && rm -rf /var/lib/apt/lists/*
 
-# Assuming you have a similar structure for the build and publish stages,
-# you can follow the same approach as in your original Dockerfile.
-# Remember to adjust paths and commands as needed for your application.
 
-# Final setup
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["Upload/Upload.csproj", "Upload/"]
+RUN dotnet restore "Upload/Upload.csproj"
+COPY . .
+WORKDIR "/src/Upload"
+RUN dotnet build "Upload.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "Upload.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+ENV CONSUL_IP=consul-service
+
+WORKDIR /app
+COPY --from=publish /app/publish .
 COPY Upload/entrypoint.sh /entrypoint.sh
 USER root
-RUN chmod +x /entrypoint.sh && chown $APP_UID /app/data
-#USER $APP_UID
+RUN apt-get update && apt-get install nfs-common -y 
+
+USER $APP_UID
 ENTRYPOINT ["dotnet", "Upload.dll"]
+
+
