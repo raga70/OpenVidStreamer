@@ -26,4 +26,8 @@ spec:
                   fieldPath: status.podIP
             - name: servicePort
               value: "8081"
+            - name: NFS_SERVER
+              value: nfs-service
+            - name: NFS_PATH
+              value: "/exports"
        

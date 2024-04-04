@@ -9,18 +9,18 @@ ENV ASPNETCORE_URLS=https://+:8000
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["OpenVidStreamer.APIGateway/OpenVidStreamer.APIGateway.csproj", "OpenVidStreamer.APIGateway/"]
-RUN dotnet restore "./OpenVidStreamer.APIGateway/./OpenVidStreamer.APIGateway.csproj"
+COPY ["APIGateway/APIGateway.csproj", "APIGateway/"]
+RUN dotnet restore "APIGateway/APIGateway.csproj"
 COPY . .
-WORKDIR "/src/OpenVidStreamer.APIGateway"
-RUN dotnet build "./OpenVidStreamer.APIGateway.csproj" -c $BUILD_CONFIGURATION -o /app/build
+WORKDIR "/src/APIGateway"
+RUN dotnet build "APIGateway.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./OpenVidStreamer.APIGateway.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+RUN dotnet publish "APIGateway.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
 
 FROM base AS final
 ENV ASPNETCORE_URLS=https://+:8000  
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "OpenVidStreamer.APIGateway.dll"]
+ENTRYPOINT ["dotnet", "APIGateway.dll"]

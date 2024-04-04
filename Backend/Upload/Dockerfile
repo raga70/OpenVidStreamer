@@ -26,7 +26,7 @@ COPY --from=publish /app/publish .
 COPY Upload/entrypoint.sh /entrypoint.sh
 USER root
 RUN chmod +x /entrypoint.sh
-USER $APP_UID
+USER root
 ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
 
 
