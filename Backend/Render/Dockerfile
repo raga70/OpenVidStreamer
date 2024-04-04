@@ -1,10 +1,11 @@
 ﻿# Use Ubuntu as the base for the custom .NET environment
 FROM ubuntu:20.04 AS base
 
-# Install .NET dependencies, NFS support, and other essential tools
+# Install .NET dependencies, NFS support, wget, and other essential tools
 RUN apt-get update && apt-get install -y \
     software-properties-common \
     nfs-common \
+    wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Microsoft package signing key and repository

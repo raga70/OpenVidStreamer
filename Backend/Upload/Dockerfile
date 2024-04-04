@@ -5,6 +5,7 @@ FROM ubuntu:20.04 AS base
 RUN apt-get update && apt-get install -y \
     software-properties-common \
     nfs-common \
+     wget \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Microsoft package signing key and repository
