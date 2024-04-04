@@ -1,0 +1,35 @@
+name: Deploy Via SSH To K8S
+
+on:
+  push:
+    branches:
+      - main # Trigger on push to main branch, adjust as necessary
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install sshpass
+      run: sudo apt-get install -y sshpass
+
+    - name: Execute commands over SSH
+      env:
+        SSH_PASSWORD: ${{ secrets.DEPLSSH_PASSWORD }}
+      run: |
+        sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no ubuntu@145.220.74.148 << EOF
+          microk8s kubectl delete deployment --all
+          microk8s kubectl delete svc --all
+          sleep 5
+          microk8s ctr images remove docker.io/openvidstreamer/apigateway:latest
+          microk8s ctr images remove docker.io/openvidstreamer/render:latest
+          microk8s ctr images remove docker.io/openvidstreamer/recommendationalgo:latest
+          microk8s ctr images remove docker.io/openvidstreamer/account:latest
+          microk8s ctr images remove docker.io/openvidstreamer/videostreamer:latest
+          microk8s ctr images remove docker.io/openvidstreamer/videolibrary:latest
+          microk8s ctr images remove docker.io/openvidstreamer/upload:latest
+          cd ~/OpenVidStreamerKubernetesFiles
+          microk8s kubectl apply -f .
+        EOF
