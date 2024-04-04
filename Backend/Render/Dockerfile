@@ -6,8 +6,10 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 USER $APP_UID
 WORKDIR /app
-EXPOSE 8080
+
 EXPOSE 8081
+ENV ASPNETCORE_URLS=http://+:8081  
+
 RUN mkdir -p /app/data
 # Install NFS client utilities
 USER root
@@ -30,6 +32,7 @@ RUN dotnet publish "Render.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:Us
 
 FROM base AS final
 ENV CONSUL_IP=consul-service
+ENV ASPNETCORE_URLS=http://+:8081  
 
 WORKDIR /app
 COPY --from=publish /app/publish .

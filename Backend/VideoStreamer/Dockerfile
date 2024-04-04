@@ -1,7 +1,8 @@
 ﻿FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 8080
 EXPOSE 8081
+ENV ASPNETCORE_URLS=http://+:8081  
+
 RUN mkdir -p /app/data
 
 # Install NFS client utilities
@@ -23,6 +24,7 @@ RUN dotnet publish "VideoStreamer.csproj" -c $BUILD_CONFIGURATION -o /app/publis
 
 FROM base AS final
 ENV CONSUL_IP=consul-service
+ENV ASPNETCORE_URLS=http://+:8081  
 
 WORKDIR /app
 COPY --from=publish /app/publish .

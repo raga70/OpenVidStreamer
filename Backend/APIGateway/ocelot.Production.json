@@ -13,7 +13,7 @@
         "Type": "LeastConnection"
       },
       "ServiceDiscoveryProvider": {
-        "Host": "localhost",
+        "Host": "consul-service.default.svc.cluster.local",
         "Port": 8500,
         "Type": "Consul"
       }
@@ -33,7 +33,7 @@
         "Type": "LeastConnection"
       },
       "ServiceDiscoveryProvider": {
-        "Host": "localhost",
+        "Host": "consul-service.default.svc.cluster.local",
         "Port": 8500,
         "Type": "Consul"
       }
@@ -53,7 +53,7 @@
         "Type": "LeastConnection"
       },
       "ServiceDiscoveryProvider": {
-        "Host": "localhost",
+        "Host": "consul-service.default.svc.cluster.local",
         "Port": 8500,
         "Type": "Consul"
       }
@@ -73,7 +73,7 @@
         "Type": "LeastConnection"
       },
       "ServiceDiscoveryProvider": {
-        "Host": "localhost",
+        "Host": "consul-service.default.svc.cluster.local",
         "Port": 8500,
         "Type": "Consul"
       }
@@ -93,7 +93,7 @@
         "Type": "LeastConnection"
       },
       "ServiceDiscoveryProvider": {
-        "Host": "localhost",
+        "Host": "consul-service.default.svc.cluster.local",
         "Port": 8500,
         "Type": "Consul"
       }
@@ -113,7 +113,7 @@
         "Type": "LeastConnection"
       },
       "ServiceDiscoveryProvider": {
-        "Host": "localhost",
+        "Host": "consul-service.default.svc.cluster.local",
         "Port": 8500,
         "Type": "Consul"
       }
