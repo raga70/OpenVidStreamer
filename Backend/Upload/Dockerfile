@@ -42,4 +42,4 @@ COPY Upload/entrypoint.sh /entrypoint.sh
 USER root
 RUN chmod +x /entrypoint.sh && chown $APP_UID /app/data
 #USER $APP_UID
-ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
+ENTRYPOINT ["dotnet", "Upload.dll"]

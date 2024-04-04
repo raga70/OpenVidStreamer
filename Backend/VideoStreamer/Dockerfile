@@ -31,4 +31,4 @@ USER root
 RUN chmod +x /entrypoint.sh
 USER $APP_UID
 
-ENTRYPOINT ["/bin/sh", "/entrypoint.sh"]
+ENTRYPOINT ["dotnet", "VideoStreamer.dll"]
