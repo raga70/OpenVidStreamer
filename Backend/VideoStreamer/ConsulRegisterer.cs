@@ -20,7 +20,7 @@ public static class ConsulRegisterer
 
         var serviceCheck = new AgentServiceCheck()
         {
-            HTTP = $"https://{serviceIp}:{configuration.GetValue<string>("servicePort")}/health", 
+            HTTP = $"http://{serviceIp}:{configuration.GetValue<string>("servicePort")}/health", 
             Interval = TimeSpan.FromSeconds(30),
         };
         

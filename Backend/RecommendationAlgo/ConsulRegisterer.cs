@@ -16,13 +16,16 @@ public static class ConsulRegisterer
         string serviceIp = Environment.GetEnvironmentVariable("POD_IP") ?? configuration.GetValue<string>("POD_IP"); //gets the pod ip from the environment variable {"POD_IP"} injected by kubernetes inside of the docker container passed to the app  or fallback to the appsettings.json
         
         
+        
         var consulClient = new ConsulClient(x => x.Address = new Uri(configuration.GetValue<string>("consulUri")));
 
         var serviceCheck = new AgentServiceCheck()
         {
-            HTTP = $"https://{serviceIp}:{configuration.GetValue<string>("servicePort")}/health", 
+            HTTP = $"http://{serviceIp}:{configuration.GetValue<string>("servicePort")}/health", 
             Interval = TimeSpan.FromSeconds(30),
         };
+        
+        Console.WriteLine("MYHealthCheck: " + serviceCheck.HTTP);
         
         var registration = new AgentServiceRegistration()
         {
