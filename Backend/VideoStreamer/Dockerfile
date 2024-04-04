@@ -28,6 +28,9 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 COPY VideoStreamer/entrypoint.sh /entrypoint.sh
 USER root
+RUN apt-get update && apt-get install nfs-common -y \
+
+
 RUN chmod +x /entrypoint.sh
 USER $APP_UID
 
