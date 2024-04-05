@@ -2,28 +2,10 @@
   "Routes": [
     {
       "DownstreamPathTemplate": "/{everything}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/videolib/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "ServiceName": "OpenVisStreamer.VideoLibrary",
-      
-      
-      "UseServiceDiscovery": true,
-      "LoadBalancerOptions": {
-        "Type": "LeastConnection"
-      },
-      "ServiceDiscoveryProvider": {
-        "Host": "consul-service.default.svc.cluster.local",
-        "Port": 8500,
-        "Type": "Consul"
-      }
-    },
-    {
-      "DownstreamPathTemplate": "/{everything}",
-      "DownstreamScheme": "https",
-      "UpstreamPathTemplate": "/account/{everything}",
-      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
-      "ServiceName": "OpenVisStreamer.Account",
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
@@ -39,8 +21,64 @@
       }
     },
     {
+      "Priority": 1,
+      "DownstreamPathTemplate": "/login",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/account/login",
+      "UpstreamHttpMethod": ["Get", "Post"],
+      "ServiceName": "OpenVisStreamer.Account",
+      "UseServiceDiscovery": true,
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "ServiceDiscoveryProvider": {
+        "Host": "consul-service.default.svc.cluster.local",
+        "Port": 8500,
+        "Type": "Consul"
+      }
+    },
+    {
+      "Priority": 1,
+      "DownstreamPathTemplate": "/register",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/account/register",
+      "UpstreamHttpMethod": ["Get", "Post"],
+      "ServiceName": "OpenVisStreamer.Account",
+      "UseServiceDiscovery": true,
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "ServiceDiscoveryProvider": {
+        "Host": "consul-service.default.svc.cluster.local",
+        "Port": 8500,
+        "Type": "Consul"
+      }
+    },
+    {
+      "Priority": 0,
       "DownstreamPathTemplate": "/{everything}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
+      "UpstreamPathTemplate": "/account/{everything}",
+      "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
+      "ServiceName": "OpenVisStreamer.Account",
+      "AuthenticationOptions": {
+        "AuthenticationProviderKey": "Bearer",
+
+        "AllowedScopes": []
+      },
+      "UseServiceDiscovery": true,
+      "LoadBalancerOptions": {
+        "Type": "LeastConnection"
+      },
+      "ServiceDiscoveryProvider": {
+        "Host": "consul-service.default.svc.cluster.local",
+        "Port": 8500,
+        "Type": "Consul"
+      }
+    },
+    {
+      "DownstreamPathTemplate": "/{everything}",
+      "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/recommendationAlgo/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "ServiceName": "OpenVisStreamer.RecommendationAlgo",
@@ -60,7 +98,7 @@
     },
     {
       "DownstreamPathTemplate": "/{everything}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/render/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "ServiceName": "OpenVisStreamer.Render",
@@ -80,7 +118,7 @@
     },
     {
       "DownstreamPathTemplate": "/{everything}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/upload/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "ServiceName": "OpenVisStreamer.Upload",
@@ -100,7 +138,7 @@
     },
     {
       "DownstreamPathTemplate": "/{everything}",
-      "DownstreamScheme": "https",
+      "DownstreamScheme": "http",
       "UpstreamPathTemplate": "/streamer/{everything}",
       "UpstreamHttpMethod": [ "Get", "Post", "Put", "Delete" ],
       "ServiceName": "OpenVisStreamer.Streamer",
@@ -121,9 +159,74 @@
   ],
   "GlobalConfiguration": {
     "ServiceDiscoveryProvider": {
-      "Host": "consul-service",
+      "Host": "consul-service.default.svc.cluster.local",
       "Port": 8500,
       "Type": "Consul"
     }
-  }
+  },
+  "SwaggerEndPoints": [
+    {
+      "Key": "videolib",
+      "Config": [
+        {
+          "Name": "Video Library",
+          "Version": "v1",
+          "Service": {
+            "Name": "OpenVisStreamer.VideoLibrary",
+            "Path": "/swagger/v1/swagger.json"
+          }
+        }
+      ]
+    },
+    {
+      "Key": "account",
+      "Config": [
+        {
+          "Name": "Account Service",
+          "Version": "v1",
+          "Url": "http://145.220.74.148:8000/account/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "recommendationAlgo",
+      "Config": [
+        {
+          "Name": "Recommendation Algorithm",
+          "Version": "v1",
+          "Url": "http://145.220.74.148:8000/recommendationAlgo/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "render",
+      "Config": [
+        {
+          "Name": "Render Service",
+          "Version": "v1",
+          "Url": "http://145.220.74.148:8000/render/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "upload",
+      "Config": [
+        {
+          "Name": "Upload Service",
+          "Version": "v1",
+          "Url": "http://145.220.74.148:8000/upload/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "streamer",
+      "Config": [
+        {
+          "Name": "Streamer Service",
+          "Version": "v1",
+          "Url": "http://145.220.74.148:8000/streamer/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
 }
