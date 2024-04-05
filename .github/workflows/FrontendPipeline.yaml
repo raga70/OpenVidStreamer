@@ -1,0 +1,46 @@
+name: Build and Deploy Frontend
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'Frontend/openvidstreamer-fe/**'
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'Frontend/openvidstreamer-fe/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14' # Replace with your project's Node.js version
+      
+      - name: Install dependencies
+        run: npm install
+        working-directory: ./Frontend/openvidstreamer-fe
+      
+      - name: Build project using Vite
+        run: npx vite build
+        working-directory: ./Frontend/openvidstreamer-fe
+      
+      - name: Deploy over SSH
+        uses: appleboy/scp-action@master
+        with:
+          host: 145.220.74.148
+          username: ubuntu
+          password: ${{ secrets.DEPLSSH_PASSWORD }}
+          port: 22
+          source: "./Frontend/openvidstreamer-fe/dist/*"
+          target: "/var/www"
+          rm: true # Removes all files in the target directory before copying
+
+      - name: Clean up after deploy
+        run: rm -rf ./Frontend/openvidstreamer-fe/dist
+        if: always() # Ensures cleanup happens even if previous steps fail
