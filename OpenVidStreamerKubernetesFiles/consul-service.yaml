@@ -3,8 +3,10 @@ kind: Service
 metadata:
   name: consul-service
 spec:
+  type: NodePort
   ports:
     - port: 8500
       targetPort: 8500
+      nodePort: 32000
   selector:
     app: consul

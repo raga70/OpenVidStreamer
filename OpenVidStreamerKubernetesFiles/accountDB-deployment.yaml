@@ -26,3 +26,11 @@ spec:
           value: "12345"
         ports:
         - containerPort: 3306
+        volumeMounts:
+        - name: account-db-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: account-db-storage
+        persistentVolumeClaim:
+          claimName: account-db-pvc
+

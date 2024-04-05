@@ -19,10 +19,18 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           value: "12345"
         - name: MYSQL_DATABASE
-          value: "videolibDB"
+          value: "VideolibDB"
         - name: MYSQL_USER
           value: "admin"
         - name: MYSQL_PASSWORD
           value: "1234"
         ports:
         - containerPort: 3306
+        volumeMounts:
+        - name: videolib-db-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: videolib-db-storage
+        persistentVolumeClaim:
+          claimName: videolib-db-pvc
+

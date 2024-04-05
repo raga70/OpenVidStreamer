@@ -8,5 +8,5 @@ spec:
     app: apigateway
   ports:
     - protocol: TCP
-      port: 8081 
-      targetPort: 8081 
+      port: 8000 
+      targetPort: 8000 

@@ -2,7 +2,9 @@
 import axios from 'axios';
 import './VideoUploadForm.css';
 import {VideoCategory, VideoCategoryNames, VideoUploadDTO} from "../../Model/VideoUploadDTO.ts";
-import {Label} from "flowbite-react"; // Assuming your CSS is in this file
+import {Label} from "flowbite-react";
+import {ApiServerBaseUrl} from "../../../configProvider.ts";
+import {useStoreState} from "../../../persistenceProvider.ts"; // Assuming your CSS is in this file
 
 const UploadPage = () => {
     const [videoMetadata, setVideoMetadata] = useState<VideoUploadDTO>({
@@ -15,6 +17,8 @@ const UploadPage = () => {
     const [thumbnailFile, setThumbnailFile] = useState(null);
     const [uploadPercentage, setUploadPercentage] = useState(0);
 
+    const authToken = useStoreState('authToken');
+    
     const handleInputChange = (e) => {
         setVideoMetadata({
             ...videoMetadata,
@@ -40,9 +44,10 @@ const UploadPage = () => {
         formData.append('thumbnailFile', thumbnailFile);
 
         try {
-            await axios.post('https://localhost:5008/upload', formData, {
+            await axios.post(ApiServerBaseUrl()+ '/upload/upload', formData, {
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'multipart/form-data',
+                    "Authorization": "Bearer " + authToken
                 },
                 onUploadProgress: progressEvent => {
                     const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);

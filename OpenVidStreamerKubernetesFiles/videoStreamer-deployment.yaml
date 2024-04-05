@@ -26,4 +26,12 @@ spec:
                   fieldPath: status.podIP
             - name: servicePort
               value: "8081"
+          volumeMounts:
+            - mountPath: "/app/data"
+              name: nfs-storage
+      volumes:
+        - name: nfs-storage
+          persistentVolumeClaim:
+            claimName: nfs-pvc
+
        

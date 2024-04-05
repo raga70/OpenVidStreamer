@@ -15,14 +15,7 @@ spec:
         app: consul
     spec:
       containers:
-        - name: consul
-          image: openvidstreamer/consul:latest
-          ports:
-            - containerPort: 8500
-          volumeMounts:
-            - name: consul-config
-              mountPath: /consul/config
-      volumes:
-        - name: consul-config
-          configMap:
-            name: consul-configmap
+      - name: consul
+        image: consul:1.15.4	
+        ports:
+        - containerPort: 8500

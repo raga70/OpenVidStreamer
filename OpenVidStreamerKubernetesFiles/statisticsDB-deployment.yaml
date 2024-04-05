@@ -26,3 +26,11 @@ spec:
           value: "12345"
         ports:
         - containerPort: 3306
+        volumeMounts:
+        - name: statistics-db-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: statistics-db-storage
+        persistentVolumeClaim:
+          claimName: statistics-db-pvc
+
