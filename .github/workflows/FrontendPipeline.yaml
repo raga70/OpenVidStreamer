@@ -38,7 +38,7 @@ jobs:
           password: ${{ secrets.DEPLSSH_PASSWORD }}
           port: 22
           source: "./Frontend/openvidstreamer-fe/dist/*"
-          target: "/var/www"
+          target: "/var/www/fe"
           rm: true # Removes all files in the target directory before copying
 
       - name: Clean up after deploy
