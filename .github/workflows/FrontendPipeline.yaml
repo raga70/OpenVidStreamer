@@ -20,14 +20,17 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14' # Replace with your project's Node.js version
+          node-version: '14' # Adjust this to match your project's Node.js version
       
       - name: Install dependencies
         run: npm install
         working-directory: ./Frontend/openvidstreamer-fe
       
+      - name: Install Vite globally
+        run: npm install -g vite
+      
       - name: Build project using Vite
-        run: npx vite build
+        run: vite build
         working-directory: ./Frontend/openvidstreamer-fe
       
       - name: Deploy over SSH
@@ -40,7 +43,3 @@ jobs:
           source: "./Frontend/openvidstreamer-fe/dist/*"
           target: "/var/www/fe"
           rm: true # Removes all files in the target directory before copying
-
-      - name: Clean up after deploy
-        run: rm -rf ./Frontend/openvidstreamer-fe/dist
-        if: always() # Ensures cleanup happens even if previous steps fail
