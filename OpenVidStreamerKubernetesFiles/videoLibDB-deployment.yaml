@@ -19,7 +19,7 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           value: "12345"
         - name: MYSQL_DATABASE
-          value: "VideolibDB"
+          value: "videolibdb"
         - name: MYSQL_USER
           value: "admin"
         - name: MYSQL_PASSWORD
@@ -29,8 +29,13 @@ spec:
         volumeMounts:
         - name: videolib-db-storage
           mountPath: /var/lib/mysql
+        - name: mariadb-config
+          mountPath: /etc/mysql/conf.d/custom.cnf
+          subPath: custom.cnf
       volumes:
       - name: videolib-db-storage
         persistentVolumeClaim:
           claimName: videolib-db-pvc
-
+      - name: mariadb-config
+        configMap:
+          name: mariadb-config

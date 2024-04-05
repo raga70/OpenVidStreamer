@@ -32,7 +32,7 @@ COPY --from=publish /app/publish .
 COPY Upload/entrypoint.sh /entrypoint.sh
 USER root
 RUN apt-get update && apt-get install nfs-common -y 
-
+RUN chmod 7777 /app/data
 USER $APP_UID
 ENTRYPOINT ["dotnet", "Upload.dll"]
 

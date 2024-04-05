@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: account-db-deployment
 spec:
-  replicas: 1  # Ensure a single instance if it's a standalone database
+  replicas: 1
   selector:
     matchLabels:
       app: account-db
@@ -19,7 +19,7 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           value: "12345"
         - name: MYSQL_DATABASE
-          value: "AccountDB"
+          value: "accountdb"
         - name: MYSQL_USER
           value: "admin"
         - name: MYSQL_PASSWORD
@@ -29,8 +29,13 @@ spec:
         volumeMounts:
         - name: account-db-storage
           mountPath: /var/lib/mysql
+        - name: mariadb-config
+          mountPath: /etc/mysql/conf.d/custom.cnf
+          subPath: custom.cnf
       volumes:
       - name: account-db-storage
         persistentVolumeClaim:
           claimName: account-db-pvc
-
+      - name: mariadb-config
+        configMap:
+          name: mariadb-config

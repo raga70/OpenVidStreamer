@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mariadb-config
+data:
+  custom.cnf: |
+    [mysqld]
+    lower_case_table_names=1
