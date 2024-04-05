@@ -10,8 +10,7 @@ using RecommendationAlgo.Repository.Model.DTO;
 using RecommendationAlgo.Services;
 
 namespace RecommendationAlgo.Repository;
-
-public class RecommendationRepository(DatabaseContext dbContext, IDistributedCache distributedCache)
+public class RecommendationRepositoryOLD(DatabaseContext dbContext)
 {
     #region MutationOperations
 
@@ -42,6 +41,7 @@ public class RecommendationRepository(DatabaseContext dbContext, IDistributedCac
         else
         {
             watchHistory.Liked = VideoLikeEnum.Disliked;
+            
         }
 
         await dbContext.SaveChangesAsync();
@@ -93,86 +93,31 @@ public class RecommendationRepository(DatabaseContext dbContext, IDistributedCac
 
     #region RecomendationAlgo
 
+    
+    
     public async Task<List<VideoCategory>> GetUserPreferredCategories(Guid userId, int topN = 99999)
     {
-        var cacheKey = $"UserPreferredCategories-{userId}";
-        List<VideoCategory> preferredCategories;
+        var query = dbContext.WatchHistories.Where(w => w.UserId == userId && w.Liked == VideoLikeEnum.Liked)
+            .GroupJoin(dbContext.VideoStats, wh => wh.VideoId, vs => vs.VideoId,
+                (wh, vs) => new { WatchHistory = wh, VideoStats = vs.FirstOrDefault() })
+            .GroupBy(w => w.WatchHistory.VideoId)
+            .Select(g => new { VideoId = g.Key, Category = g.Max(w => w.VideoStats.Category) });
 
-        // Try to get the data from the cache
-        var cachedData = await distributedCache.GetStringAsync(cacheKey);
-        if (!string.IsNullOrEmpty(cachedData))
-        {
-            preferredCategories = JsonSerializer.Deserialize<List<VideoCategory>>(cachedData);
-        }
-        else
-        {
-            // Data not found in cache, fetch from database
-            var query = dbContext.WatchHistories.Where(w => w.UserId == userId && w.Liked == VideoLikeEnum.Liked)
-                .GroupJoin(dbContext.VideoStats, wh => wh.VideoId, vs => vs.VideoId,
-                    (wh, vs) => new { WatchHistory = wh, VideoStats = vs.FirstOrDefault() })
-                .GroupBy(w => w.WatchHistory.VideoId).Select(g =>
-                    new { VideoId = g.Key, Category = g.Max(w => w.VideoStats.Category) });
-
-            preferredCategories = await query.GroupBy(v => v.Category).OrderByDescending(g => g.Count()).Take(topN)
-                .Select(g => g.Key).ToListAsync();
-
-            // Serialize and store the data in the cache with a 1-day expiration
-            var serializedData = JsonSerializer.Serialize(preferredCategories);
-            var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(1));
-            await distributedCache.SetStringAsync(cacheKey, serializedData, options);
-        }
+        var preferredCategories = await query.GroupBy(v => v.Category).OrderByDescending(g => g.Count()).Take(topN)
+            .Select(g => g.Key).ToListAsync();
 
         return preferredCategories;
     }
+    
+    
+    
+
 
 
     public async Task<List<Guid>> GetPopularVideos(int topN, Guid? excludeVideosWatchedByAccId = null,
         VideoCategory? category = null)
     {
-        const int CacheTopN = 100;
-        var cacheKey = $"PopularVideos-{(category.HasValue ? category.ToString() : "All")}";
-        List<Guid> popularVideos;
-
-        // Check if the request exceeds the cached amount and bypass cache if it does
-        if (topN > CacheTopN)
-        {
-            popularVideos = await FetchPopularVideosFromDb(topN, category);
-        }
-        else
-        {
-            var cachedData = await distributedCache.GetStringAsync(cacheKey);
-            if (!string.IsNullOrEmpty(cachedData))
-            {
-                // Deserialize and trim the cache result if necessary
-                var cachedVideos = JsonSerializer.Deserialize<List<Guid>>(cachedData);
-                popularVideos = cachedVideos.Take(topN).ToList();
-            }
-            else
-            {
-                // Fetch from database and cache the result
-                var videosToCache = await FetchPopularVideosFromDb(CacheTopN, category);
-                var serializedData = JsonSerializer.Serialize(videosToCache);
-                var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromDays(1));
-                await distributedCache.SetStringAsync(cacheKey, serializedData, options);
-
-                popularVideos = videosToCache.Take(topN).ToList();
-            }
-        }
-
-        // Always exclude videos watched by the account if an account ID is provided
-        if (excludeVideosWatchedByAccId.HasValue)
-        {
-            var watchedVideosByAccount = await dbContext.WatchHistories
-                .Where(w => w.UserId == excludeVideosWatchedByAccId).Select(w => w.VideoId).ToListAsync();
-
-            popularVideos = popularVideos.Where(v => !watchedVideosByAccount.Contains(v)).ToList();
-        }
-
-        return popularVideos;
-    }
-
-    private async Task<List<Guid>> FetchPopularVideosFromDb(int topN, VideoCategory? category)
-    {
+        // Define a query that calculates the popularity score for each video directly in the database
         var query = dbContext.WatchHistories
             .GroupJoin(dbContext.VideoStats, wh => wh.VideoId, vs => vs.VideoId,
                 (wh, vs) => new { WatchHistory = wh, VideoStats = vs.FirstOrDefault() })
@@ -187,12 +132,25 @@ public class RecommendationRepository(DatabaseContext dbContext, IDistributedCac
                 Category = g.Max(w => w.VideoStats.Category)
             });
 
-        if (category.HasValue)
+        // If a category is provided, filter the videos by the given category
+        if (category is not null)
         {
             query = query.Where(v => v.Category == category);
         }
 
-        return await query.OrderByDescending(v => v.PopularityScore).Take(topN).Select(v => v.VideoId).ToListAsync();
+        // If an account ID is provided, exclude videos watched by this account
+        if (excludeVideosWatchedByAccId is not null)
+        {
+            var watchedVideosByAccount = dbContext.WatchHistories.Where(w => w.UserId == excludeVideosWatchedByAccId)
+                .Select(w => w.VideoId).ToList();
+
+            query = query.Where(v => !watchedVideosByAccount.Contains(v.VideoId));
+        }
+
+        var popularVideos = await query.OrderByDescending(v => v.PopularityScore).Take(topN).Select(v => v.VideoId)
+            .ToListAsync();
+
+        return popularVideos;
     }
 
 
@@ -252,36 +210,17 @@ public class RecommendationRepository(DatabaseContext dbContext, IDistributedCac
     /// </summary>
     public async Task<List<Guid>> GetAlgoRecommendedVideos(Guid accId, int topN)
     {
-        // Cache keys
-        var likedVideosCacheKey = $"LikedVideos-{accId}";
-        var similarUsersCacheKey = $"SimilarUsers-{accId}";
-
-        // Attempt to fetch liked videos from cache
-        List<Guid> likedVideos = await GetFromCache<List<Guid>>(likedVideosCacheKey);
-        if (likedVideos == null)
-        {
-            likedVideos = await dbContext.WatchHistories
-                .Where(w => w.UserId == accId && w.Liked == VideoLikeEnum.Liked)
-                .Select(w => w.VideoId).ToListAsync();
-
-            await SetCache(likedVideosCacheKey, likedVideos, TimeSpan.FromMinutes(20));
-        }
+       
         
+        // Find all the videos that the current user has liked
+        var likedVideos = dbContext.WatchHistories.Where(w => w.UserId == accId && w.Liked == VideoLikeEnum.Liked)
+            .Select(w => w.VideoId);
 
-        // Attempt to fetch similar users from cache
-        List<Guid> similarUsers = await GetFromCache<List<Guid>>(similarUsersCacheKey);
-        if (similarUsers == null)
-        {
-            similarUsers = await dbContext.WatchHistories
-                .Where(w => likedVideos.Contains(w.VideoId) && w.UserId != accId && w.Liked == VideoLikeEnum.Liked)
-                .Select(w => w.UserId).Distinct().ToListAsync();
+        // Find all the users who have liked the same videos
+        var similarUsers = dbContext.WatchHistories
+            .Where(w => likedVideos.Contains(w.VideoId) && w.UserId != accId && w.Liked == VideoLikeEnum.Liked)
+            .Select(w => w.UserId);
 
-            await SetCache(similarUsersCacheKey, similarUsers, TimeSpan.FromMinutes(20));
-        }
-
-        
-        
-        
         // Define a query that calculates the popularity score for each video directly in the database
         var query = dbContext.WatchHistories
             .GroupJoin(dbContext.VideoStats, wh => wh.VideoId, vs => vs.VideoId,
@@ -312,25 +251,23 @@ public class RecommendationRepository(DatabaseContext dbContext, IDistributedCac
         });
 
         // Sort the videos by the final score in descending order and take the top N
-        var recommendedVideos = await finalQuery.OrderByDescending(v => v.FinalScore).ThenByDescending(v => v.VideoId)
-            .Take(topN).Select(v => v.VideoId).ToListAsync();
+        var recommendedVideos = await finalQuery.OrderByDescending(v => v.FinalScore).ThenByDescending(v=>v.VideoId).Take(topN).Select(v => v.VideoId)
+            .ToListAsync();
 
 
         int numberOfNewVideosToInject = 0;
-
+        
         if (recommendedVideos.Count < topN) // new users dont have watch history and have 0 recommendations
         {
             numberOfNewVideosToInject = topN - recommendedVideos.Count;
-        }
-        else if (recommendedVideos.Count >= topN)
+        }else if (recommendedVideos.Count >= topN)
         {
             numberOfNewVideosToInject = 5;
             recommendedVideos.RemoveRange(recommendedVideos.Count - 5, 5);
         }
-
-        var newVideos = await dbContext.VideoStats.OrderByDescending(v => v.PublishedAt).Select(v => v.VideoId)
-            .Take(numberOfNewVideosToInject).ToListAsync();
-
+        var newVideos =  
+            await dbContext.VideoStats.OrderByDescending(v => v.PublishedAt).Select(v => v.VideoId).Take(numberOfNewVideosToInject).ToListAsync();
+        
         var random = new Random();
         for (int i = 0; i <= numberOfNewVideosToInject; i++)
         {
@@ -343,35 +280,53 @@ public class RecommendationRepository(DatabaseContext dbContext, IDistributedCac
         return recommendedVideos;
     }
 
-
+    
+    
     public async Task<List<Guid>> GetVideoRecommendationsViaStoredProcedureAsync(Guid accountId, int topN)
     {
-        var parameters = new[] { new SqlParameter("@accountId", accountId), new SqlParameter("@topN", topN) };
+      
+        var parameters = new[] {
+            new SqlParameter("@accountId", accountId),
+            new SqlParameter("@topN", topN)
+        };
+        
+            var recommendations = await dbContext.VideoRecommendations .FromSqlRaw("CALL GetAlgoRecommendedVideos(@accountId, @topN)", parameters)
+                .ToListAsync();
 
-        var recommendations = await dbContext.VideoRecommendations
-            .FromSqlRaw("CALL GetAlgoRecommendedVideos(@accountId, @topN)", parameters).ToListAsync();
-
-        List<Guid> videoIds = new();
-        foreach (var videoRecommendation in recommendations)
-        {
-            videoIds.Add(new Guid(videoRecommendation.VideoId));
-        }
-
-        return videoIds;
+            List<Guid> videoIds = new();
+            foreach (var videoRecommendation in recommendations)
+            {
+                videoIds.Add(new Guid(videoRecommendation.VideoId));
+            }
+            
+            return videoIds;
     }
-
-
-    /// <summary>
-    /// does the same as <see cref="GetAlgoRecommendedVideos"/> but filters by category
-    ///
-    /// for stramed line view view  <see cref="RecommendationService.GetRecommendedVideos"/>
-    /// </summary>
-    /// <param name="accId"></param>
-    /// <param name="topN"></param>
-    /// <param name="category"></param>
-    /// <returns></returns>
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+/// <summary>
+/// does the same as <see cref="GetAlgoRecommendedVideos"/> but filters by category
+///
+/// for stramed line view view  <see cref="RecommendationService.GetRecommendedVideos"/>
+/// </summary>
+/// <param name="accId"></param>
+/// <param name="topN"></param>
+/// <param name="category"></param>
+/// <returns></returns>
     public async Task<List<Guid>> GetAlgoRecommendedVideosForCategory(Guid accId, int topN, VideoCategory category)
     {
+        
         // Find all the videos that the current user has liked
         var likedVideos = dbContext.WatchHistories.Where(w => w.UserId == accId && w.Liked == VideoLikeEnum.Liked)
             .Select(w => w.VideoId);
@@ -466,27 +421,4 @@ public class RecommendationRepository(DatabaseContext dbContext, IDistributedCac
             Category = videoStats.Category
         };
     }
-    
-    
-    
-    // Utility method for redis
-    private async Task<T> GetFromCache<T>(string cacheKey) where T : class
-    {
-        var cachedData = await distributedCache.GetStringAsync(cacheKey);
-        if (!string.IsNullOrEmpty(cachedData))
-        {
-            return JsonSerializer.Deserialize<T>(cachedData);
-        }
-
-        return null;
-    }
-    private async Task SetCache<T>(string cacheKey, T data, TimeSpan expiration) where T : class
-    {
-        var options = new DistributedCacheEntryOptions().SetAbsoluteExpiration(expiration);
-        var serializedData = JsonSerializer.Serialize(data);
-        await distributedCache.SetStringAsync(cacheKey, serializedData, options);
-    }
-    
-    
-    
 }

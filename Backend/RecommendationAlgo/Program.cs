@@ -13,6 +13,12 @@ var serverVersion = new MariaDbServerVersion(new Version(10, 4, 24));
 builder.Services.AddDbContext<DatabaseContext>(options =>
     options.UseMySql(builder.Configuration.GetConnectionString("DefaultConnection"), serverVersion));
 
+
+builder.Services.AddStackExchangeRedisCache(redisOptions =>
+{
+    redisOptions.Configuration = builder.Configuration["redisConnection"];
+});
+
 builder.Services.AddScoped<RecommendationRepository>();
 builder.Services.AddControllers();
 builder.Services.AddHealthChecks();

@@ -7,8 +7,14 @@ public class DatabaseContext(DbContextOptions<DatabaseContext> options) : DbCont
 {
     public DbSet<WatchHistory> WatchHistories { get; set; }
     public DbSet<VideoStats> VideoStats { get; set; }
+    
+    public DbSet<VideoRecommendation> VideoRecommendations { get; set; }
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder) 
     {
+        
+        modelBuilder.Entity<VideoRecommendation>().HasNoKey().ToView(null);
+        
         modelBuilder.Entity<WatchHistory>().HasKey(e => new { e.UserId, e.VideoId }); //ensure  defining composite key (annotations are not reliable for composite keys)
        
         modelBuilder.Entity<WatchHistory>()//One To Many relationship between WatchHistory and VideoStats , assuming that VideoStats gets created first (///VideoMetadataConsumer should fill it after video upload)
