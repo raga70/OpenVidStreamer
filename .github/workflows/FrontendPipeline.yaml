@@ -1,4 +1,4 @@
-name: Deploy Frontend
+name: Build and Deploy Frontend
 
 on:
   push:
@@ -16,24 +16,34 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      
+
       - name: Set up Node.js
         uses: actions/setup-node@v2
         with:
           node-version: '18' # Adjust this to match your project's Node.js version
-      
+
       - name: Install dependencies
         run: npm install
         working-directory: ./Frontend/openvidstreamer-fe
-      
+
       - name: Install Vite globally
         run: npm install -g vite
-      
+
       - name: Build project using Vite
         run: vite build
         working-directory: ./Frontend/openvidstreamer-fe
-      
-      - name: Deploy over SSH
+
+      - name: Clean up target directory on server
+        uses: appleboy/ssh-action@master
+        with:
+          host: 145.220.74.148
+          username: ubuntu
+          password: ${{ secrets.DEPLSSH_PASSWORD }}
+          port: 22
+          script: |
+            find /var/www/fe -mindepth 1 -delete
+
+      - name: Copy build to server
         uses: appleboy/scp-action@master
         with:
           host: 145.220.74.148
@@ -42,4 +52,3 @@ jobs:
           port: 22
           source: "./Frontend/openvidstreamer-fe/dist/*"
           target: "/var/www/fe"
-          rm: true # Removes all files in the target directory before copying
