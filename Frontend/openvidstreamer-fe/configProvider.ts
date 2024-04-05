@@ -1,6 +1,9 @@
 ﻿let appSettings: any = null;
+
 export const loadConfig = async () => {
-    const response = await fetch("/appsettings.json");
+    // Use the environment variable to determine the file name
+    const configFileName = import.meta.env.VITE_APPSETTINGS_FILENAME;
+    const response = await fetch(`/${configFileName}`);
     appSettings = await response.json();
 };
 
