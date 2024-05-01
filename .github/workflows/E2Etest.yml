@@ -24,6 +24,10 @@ jobs:
     - name: Install Chrome
       run: choco install googlechrome --ignore-checksums
 
+    - name: Sleep for 10m
+      run: Start-Sleep -s 600
+      shell: powershell
+
     - name: Navigate to E2E Tests directory
       run: cd Backend/Tests/E2E.Tests
 
