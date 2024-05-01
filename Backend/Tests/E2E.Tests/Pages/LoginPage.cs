@@ -9,6 +9,6 @@ public static class LoginPage
     public static  By LoginButton = By.XPath("""//*[@id="root"]/div[2]/div/div/article/section/button[2]"""); //after switch
     public static  By RegisterButton = By.XPath("""//*[@id="root"]/div[2]/div/div/article/section/button[1]"""); //after switch
  
-    public static By AcceptEula = By.XPath("""//*[@id=":r2:"]/div/div[3]/button/span"""); //only available after registe pressed
-    
+    public static By AcceptEula = By.XPath("""//*[@id=":r0:"]/div/div[3]/button/span"""); //only available after registe pressed
+  
 }

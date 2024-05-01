@@ -20,6 +20,7 @@ public class LoginTests
     [Fact]
     public void Login()
     {
+        Thread.Sleep(1000);
         string usernameText = "raga70@abv.bg";
         IWebElement usernameInput = _driver.FindElement(LoginPage.UsernameInput);
         foreach (var c in usernameText)
@@ -59,6 +60,7 @@ public class LoginTests
     [Fact]
     public void Register()
     {
+        Thread.Sleep(1000);
        // _driver.FindElement(LoginPage.UsernameInput).SendKeys($"Tester-{new Guid().ToString()}@abv.bg");
        IWebElement usernameInput = _driver.FindElement(LoginPage.UsernameInput);
        string usernameText = $"Tester-{Guid.NewGuid().ToString()}@abv.bg";
@@ -75,12 +77,12 @@ public class LoginTests
        {
            passwordInput
                .SendKeys(c.ToString());
-              Thread.Sleep(200);
+              Thread.Sleep(600);
        }
        
        
         _driver.FindElement(LoginPage.RegisterButton).Click();
-        Thread.Sleep(500);
+        Thread.Sleep(1500);
         _driver.FindElement(LoginPage.AcceptEula).Click();
         Thread.Sleep(5000);
         Assert.NotNull(_driver.FindElement(Common.LogoutButton));
