@@ -4,7 +4,7 @@ import axios from "axios";
 import {ApiServerBaseUrl} from "../../../configProvider.ts";
 import {VideoCategory} from "../../Model/VideoUploadDTO.ts";
 import {Video} from "../../Model/Video.ts";
-import {useStoreState} from "../../../persistenceProvider.ts";
+import {useStoreState} from "../../persistenceProvider.ts";
 import toast from "react-hot-toast";
 import {useNavigate} from "react-router-dom";
 

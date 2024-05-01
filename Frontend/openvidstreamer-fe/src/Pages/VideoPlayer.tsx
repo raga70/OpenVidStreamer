@@ -1,11 +1,11 @@
 ﻿import React, {useEffect, useRef, useState} from 'react';
 import Hls from 'hls.js';
 import {ApiServerBaseUrl} from "../../configProvider.ts";
-import {useStoreState} from "../../persistenceProvider.ts";
+import {useStoreState} from "../persistenceProvider.ts";
 import {useLocation} from "react-router-dom";
 import axios from "axios";
 import {getCategoryName, Video} from "../Model/Video.ts";
-import toast from "react-hot-toast";
+
 import {AiOutlineDislike, AiOutlineLike} from "react-icons/ai";
 import {VideoCategory} from "../Model/VideoUploadDTO.ts";
 const VideoPlayer = () => {

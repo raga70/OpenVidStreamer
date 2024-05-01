@@ -3,7 +3,7 @@ import {VideoCategory} from "../../Model/VideoUploadDTO.ts";
 import VideoListCarosel from "./VideoRecomendations.tsx";
 import axios from "axios";
 import {ApiServerBaseUrl} from "../../../configProvider.ts";
-import {useStoreState} from "../../../persistenceProvider.ts";
+import {useStoreState} from "../../persistenceProvider.ts";
 import {getCategoryName} from "../../Model/Video.ts";
 
 const HomePage = () => {
@@ -35,7 +35,7 @@ const HomePage = () => {
 
     return (
         
-        <div style={{overflowY:"scroll", height:"100vh"}}>
+        <div className={"vomitBackground"} style={{overflowY:"scroll", height:"100vh"}}>
             <VideoListCarosel isHotVideos={false} categoryName={VideoCategory.Other}/>
             <VideoListCarosel isHotVideos={true}  categoryName={VideoCategory.Other}/>
             {favoriteCategories.length >0 ? favoriteCategories.map((category) => (

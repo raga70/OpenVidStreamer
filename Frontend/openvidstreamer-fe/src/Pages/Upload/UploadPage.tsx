@@ -4,7 +4,7 @@ import './VideoUploadForm.css';
 import {VideoCategory, VideoCategoryNames, VideoUploadDTO} from "../../Model/VideoUploadDTO.ts";
 import {Label} from "flowbite-react";
 import {ApiServerBaseUrl} from "../../../configProvider.ts";
-import {useStoreState} from "../../../persistenceProvider.ts"; // Assuming your CSS is in this file
+import {useStoreState} from "../../persistenceProvider.ts"; // Assuming your CSS is in this file
 
 const UploadPage = () => {
     const [videoMetadata, setVideoMetadata] = useState<VideoUploadDTO>({
@@ -59,7 +59,7 @@ const UploadPage = () => {
             alert(`Upload failed: ${error.response.data}`);
         }
 
-        retu
+        
         // Reset progress bar after a short delay
         setTimeout(() => setUploadPercentage(0), 1500);
     };

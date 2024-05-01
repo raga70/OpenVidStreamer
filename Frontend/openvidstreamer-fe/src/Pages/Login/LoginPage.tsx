@@ -5,7 +5,7 @@ import {useState} from "react";
 import axios from "axios";
 import {ApiServerBaseUrl} from "../../../configProvider.ts";
 import {LoginResponse} from "../../Model/LoginResponse.ts";
-import {dispatch} from "../../../persistenceProvider.ts";
+import {dispatch} from "../../persistenceProvider.ts";
 import toast, {Toaster} from "react-hot-toast";
 
 
@@ -19,14 +19,16 @@ const LoginPageComp = () => {
       
         
      
-      const resp:LoginResponse = await  axios.post(ApiServerBaseUrl()+"/account/register", {email: username, passwordUnhashed: password}).catch((e) => {if (e.response.status == 442) {toast.error("Email already in use")} else {toast.error("Registration failed")}})
-            
-       
+      const resp = await  axios.post(ApiServerBaseUrl()+"/account/register", {email: username, passwordUnhashed: password}).catch((e) => {if (e.response.status == 442) {toast.error("Email already in use")} else {toast.error("Registration failed")}})
+        
+        const data:LoginResponse = resp.data;
+        
+      
         
         // toast.success("Registration successful")
-        dispatch({type: 'setAuthToken', authToken: resp.item2})
-        dispatch({type: 'setAccountData', accountData: resp.item1})
-        window.location.href = "/home"
+        dispatch({type: 'setAuthToken', authToken: data.item2})
+        dispatch({type: 'setAccountData', accountData: data.item1})
+         window.location.href = "/home"
         
     }
     const handleLogin = async () => {

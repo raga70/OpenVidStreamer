@@ -32,6 +32,34 @@ body {
   overflow: hidden;
 }
 
+
+.vomitBackground {
+  /* Original gradient background */
+  background: linear-gradient(45deg, #fa466c, #405efa);
+
+  /* Adding a dark overlay using pseudo-element */
+  position: relative;
+  z-index: 0;
+}
+
+.vomitBackground::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: -10px;
+  right: -10px;
+  bottom: -10px;
+  background: rgba(0, 0, 0, 0.5); /* Dark overlay with 50% opacity */
+  z-index: -1;
+  filter: blur(5px); /* Blur effect */
+}
+
+/* Ensure other content inside .vomitBackground is visible */
+.vomitBackground * {
+  position: relative;
+  z-index: 1;
+}
+
 h1 {
   font-size: 3.2em;
   line-height: 1.1;

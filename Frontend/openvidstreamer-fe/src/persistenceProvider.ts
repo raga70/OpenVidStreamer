@@ -1,7 +1,7 @@
 ﻿import {Dispatch} from 'react';
 import {applyMiddleware} from 'redux';
 import {createStore} from 'react-hooks-global-state';
-import {AccountData} from "./src/Model/LoginResponse";
+import {AccountData} from "./Model/LoginResponse.ts";
 
 
 
@@ -15,7 +15,7 @@ type State = {
 };
 
 type Action =
-    | { type: 'setAuthToken'; authToken: string }
+    | { type: 'setAuthToken'; authToken: string | null }
     | { type: 'setAccountData'; accountData: AccountData }
 
 
@@ -30,7 +30,7 @@ const LOCAL_STORAGE_KEY = 'OVS_TurboWebUi';
 const parseState = (str: string | null): State | null => {
     try {
         const state = JSON.parse(str || '');
-        if (typeof state.authToken !== 'string') throw new Error();
+        if (typeof state.authToken !== 'string' && state.authToken !== null ) throw new Error();
         return state as State;
     } catch (e) {
         return null;
