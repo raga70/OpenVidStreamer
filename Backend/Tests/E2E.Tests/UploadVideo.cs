@@ -22,6 +22,7 @@ public class UploadVideo
         var thumbnailFilePath = Path.Combine(repoRoot, "tmp", "sampleThumbnail.jpg");
         login.Login();
         _driver.Navigate().GoToUrl("http://145.220.74.148:3000/upload");
+        Thread.Sleep(1500);
         _driver.FindElement(UploadPage.TitleInput).SendKeys($"Test-{new Guid().ToString()}");
         _driver.FindElement(UploadPage.DescriptionInput).SendKeys("Test Description, Lorem Ipsum Dolor Sit Amet Consectetur Adipiscing Elit Sed Do Eiusmod Tempor Incididunt Ut Labore Et Dolore Magna Aliqua Ut Enim Ad Minim Veniam Quis Nostrud Exercitation Ullamco Laboris Nisi Ut Aliquip Ex Ea Commodo Consequat");
         _driver.FindElement(UploadPage.CategoryInput).SendKeys("Music");
