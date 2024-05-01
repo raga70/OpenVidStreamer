@@ -27,6 +27,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MMLib.SwaggerForOcelot", ".
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RecommendationAlog.Benchmark", "Tests\RecommendationAlog.Benchmark\RecommendationAlog.Benchmark.csproj", "{95DB30C6-6FE0-405D-81EA-AEBEB8053A2F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Upload.Test", "Tests\Upload.Test\Upload.Test.csproj", "{1EB6093A-DAA0-4685-B998-2BB788E9A846}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "E2E.Tests", "Tests\E2E.Tests\E2E.Tests.csproj", "{DBF27946-DB05-4C61-925B-3BDE98D31C4E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +81,14 @@ Global
 		{95DB30C6-6FE0-405D-81EA-AEBEB8053A2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95DB30C6-6FE0-405D-81EA-AEBEB8053A2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95DB30C6-6FE0-405D-81EA-AEBEB8053A2F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EB6093A-DAA0-4685-B998-2BB788E9A846}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EB6093A-DAA0-4685-B998-2BB788E9A846}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EB6093A-DAA0-4685-B998-2BB788E9A846}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EB6093A-DAA0-4685-B998-2BB788E9A846}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBF27946-DB05-4C61-925B-3BDE98D31C4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBF27946-DB05-4C61-925B-3BDE98D31C4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBF27946-DB05-4C61-925B-3BDE98D31C4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBF27946-DB05-4C61-925B-3BDE98D31C4E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,5 +96,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{919F0ADE-6541-4DCE-94D9-18C5A7C41ED4} = {43FDBBCE-75B2-4BC5-AEA8-F001FB3C67E2}
 		{95DB30C6-6FE0-405D-81EA-AEBEB8053A2F} = {43FDBBCE-75B2-4BC5-AEA8-F001FB3C67E2}
+		{1EB6093A-DAA0-4685-B998-2BB788E9A846} = {43FDBBCE-75B2-4BC5-AEA8-F001FB3C67E2}
+		{DBF27946-DB05-4C61-925B-3BDE98D31C4E} = {43FDBBCE-75B2-4BC5-AEA8-F001FB3C67E2}
 	EndGlobalSection
 EndGlobal
