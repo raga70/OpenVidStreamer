@@ -1,0 +1,39 @@
+name: Run E2E Tests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'Backend/Tests/E2E.Tests/**'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'Backend/Tests/E2E.Tests/**'
+
+jobs:
+  test:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: '8.0'  # Updated to .NET 8
+
+    - name: Install Chrome
+      run: choco install googlechrome --ignore-checksums
+
+    - name: Navigate to E2E Tests directory
+      run: cd Backend/Tests/E2E.Tests
+
+    - name: Restore .NET packages
+      run: dotnet restore
+
+    - name: Run E2E Tests
+      run: dotnet test
+
