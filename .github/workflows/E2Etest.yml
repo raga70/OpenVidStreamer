@@ -11,6 +11,9 @@ on:
 jobs:
   test:
     runs-on: windows-latest
+    
+    env:
+      REPO_ROOT: ${{ github.workspace }}
 
     steps:
     - name: Checkout code
