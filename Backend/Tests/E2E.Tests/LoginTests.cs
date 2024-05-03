@@ -52,6 +52,7 @@ public class LoginTests
     public void Logout()
     {
         Login();
+        Thread.Sleep(3000);
         _driver.FindElement(Common.LogoutButton).Click();
         Thread.Sleep(5000);
         Assert.NotNull(_driver.FindElement(LoginPage.LoginButton));
