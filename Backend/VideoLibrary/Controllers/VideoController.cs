@@ -46,4 +46,14 @@ public class VideoController(VideoService _videoService) : ControllerBase
     }
     
     
+    
+    [HttpGet("searchVideos")]
+    public async Task<ActionResult<List<VideoDTO>> > FindVideosByTittle([FromQuery]string searchQuery)
+    {
+        var videos = await _videoService.FindVideosByTittle(searchQuery);
+        return Ok(videos);
+    }
+    
+    
+    
 }

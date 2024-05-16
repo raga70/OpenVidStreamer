@@ -1,49 +1,105 @@
 ﻿using Account.Model.DTO;
 using Account.Repository.EFC;
-
-namespace Account.Services;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Polly;
 using Stripe;
 
-public class StripePaymentService(DatabaseContext _accountDbContext)
+namespace Account.Services;
+public class StripePaymentService
 {
-    private readonly IAsyncPolicy<Charge> _retryPolicy  = Policy
-        .HandleResult<Charge>(charge => charge.Status == "pending")
-    .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(2), (result, timeSpan, retryCount, context) =>
-    {
-        Console.WriteLine($"Payment status: {result.Result.Status}, for transactionID {result.Result.Id}. Retrying in {timeSpan.Seconds} seconds. Attempt {retryCount}.");
-    });
-
-
-
-    public async Task<Charge> ProcessPaymentAsync(IncomingPaymentDTO incomingPayment, string accId) //it`s ok for this to hang the user will wait with us until the transaction is complete
-    {
-        var chargeOptions = new ChargeCreateOptions
+    private readonly DatabaseContext _accountDbContext;
+    private readonly IAsyncPolicy<PaymentIntent> _retryPolicy = Policy
+        .HandleResult<PaymentIntent>(paymentIntent => paymentIntent.Status == "requires_action" || paymentIntent.Status == "requires_payment_method")
+        .WaitAndRetryAsync(3, retryAttempt => TimeSpan.FromSeconds(2), (result, timeSpan, retryCount, context) =>
         {
-            Amount = Convert.ToInt64(incomingPayment.Amount * 100), // Convert amount to cents
-            Currency = "eur",
-            Source = incomingPayment.StripeToken, 
-            Description = $"OpenVidStreamer - Payment of monthly subscription for AccountNumber: {accId}" 
-        };
-        
-        
-        
-        
-        
-        var chargeService = new ChargeService();
-        var charge = await _retryPolicy.ExecuteAsync(async () =>
-        {
-            var charge = await chargeService.CreateAsync(chargeOptions);
-            if (charge.Status == "failed")
-            {
-                throw new Exception("Payment failed.");
-            }
-            return charge;
+            Console.WriteLine($"Payment status: {result.Result.Status}, for transactionID {result.Result.Id}. Retrying in {timeSpan.Seconds} seconds. Attempt {retryCount}.");
         });
-        //if we hit this line charge.Status == "succeeded" (_retryPolicy.ExecuteAsync did not throw an exception)
-        _accountDbContext.Accounts.FirstOrDefault(x => x.AccId == Guid.Parse(accId)).Balance =incomingPayment.Amount;
 
-        return charge;
-
+    private readonly IConfiguration _configuration;
+    public StripePaymentService(DatabaseContext accountDbContext, IConfiguration configuration)
+    {
+        _accountDbContext = accountDbContext;
+        _configuration = configuration;
     }
+
+    public async Task<PaymentIntent> ProcessPaymentAsync(IncomingPaymentDTO incomingPayment, string accId)
+    {
+        var account = _accountDbContext.Accounts.FirstOrDefault(a => a.AccId == Guid.Parse(accId));
+        if (account is null)
+        {
+            throw new Exception("Account not found.");
+        }
+        var customerService = new CustomerService();
+        var customerOptions = new CustomerCreateOptions
+        {
+            Email = account.Email, 
+            PaymentMethod = incomingPayment.StripeToken
+        };
+        var customer = await customerService.CreateAsync(customerOptions);
+        
+        
+        var paymentIntentService = new PaymentIntentService();
+        
+        var paymentIntentOptions = new PaymentIntentCreateOptions
+        {
+            Amount = Convert.ToInt64(incomingPayment.Amount * 100), // Convert to cents
+            Currency = "eur",
+            PaymentMethod = incomingPayment.StripeToken,
+            Description = $"OpenVidStreamer - Payment of monthly subscription for AccountNumber: {accId}",
+            Confirm = true,
+            UseStripeSdk = true,
+            ReturnUrl = _configuration.GetValue<string>("Stripe:RedirectUrl"),
+            Customer = customer.Id
+        };
+
+        PaymentIntent paymentIntent = await _retryPolicy.ExecuteAsync(async () =>
+        {
+            return await paymentIntentService.CreateAsync(paymentIntentOptions);
+        });
+
+        if (paymentIntent.Status == "succeeded")
+        {
+            // Update the account balance only if payment succeeds
+           // var account = _accountDbContext.Accounts.FirstOrDefault(a => a.AccId == Guid.Parse(accId));
+            if (account != null)
+            {
+                account.Balance += incomingPayment.Amount;
+                await _accountDbContext.SaveChangesAsync();
+            }
+        }
+
+        if (paymentIntent.Status == "requires_action")
+            
+        {
+            // Return necessary information for client to complete the authentication
+            return paymentIntent;
+        }
+        
+        
+        
+        return paymentIntent;
+    }
+    
+    
+    public async Task<PaymentIntent> ConfirmPaymentAsync(string paymentIntentId, string accId)
+    {
+        var paymentIntentService = new PaymentIntentService();
+        var paymentIntent = await paymentIntentService.GetAsync(paymentIntentId);
+        
+        if (paymentIntent.Status == "succeeded")
+        {
+            // Update the account balance only if payment succeeds
+            var account = _accountDbContext.Accounts.FirstOrDefault(a => a.AccId == Guid.Parse(accId));
+            if (account != null)
+            {
+                account.Balance += paymentIntent.Amount;
+                await _accountDbContext.SaveChangesAsync();
+            }
+        }
+        
+        return paymentIntent;
+    }
+    
 }

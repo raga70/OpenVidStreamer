@@ -56,4 +56,12 @@ public class VideoService
         
         
     }
+    
+    public async Task<List<VideoDTO> > FindVideosByTittle(string searchQuery, int topN=50)
+    {
+        var videos = await _videoRepository.FindVideosByTittle(searchQuery, topN);
+        return videos.Select(_videoMapper.VideoToVideoDto).ToList();
+    }
+    
+    
 }

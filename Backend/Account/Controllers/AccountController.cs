@@ -54,5 +54,16 @@ public class AccountController(AccountService _accountService):ControllerBase
         var account = await _accountService.ActivateSubscription(new Guid(accId));
         return Ok(account);
     }
+
+
+    [HttpGet("getAccount")]
+    public async Task<ActionResult<AccountDTO>> getAccount()
+    {
+        HttpContext.Request.Headers.TryGetValue("Authorization", out var token);
+        var accId = Common.AccIdExtractorFromHttpContext.ExtractAccIdUpnFromJwtToken(token);
+        var account = await _accountService.GetAccountById(new Guid(accId));
+        return account;
+    }
+    
    
 }

@@ -17,9 +17,20 @@ public class UploadVideo
     [Fact]
     public void Upload()
     {
-        var repoRoot = GetRepositoryRoot();
-        var videoFilePath = Path.Combine(repoRoot, "tmp", "SampleVideo1mb.mp4");
-        var thumbnailFilePath = Path.Combine(repoRoot, "tmp", "sampleThumbnail.jpg");
+        string videoFilePath;
+        string thumbnailFilePath;
+        try
+        {
+            var repoRoot = GetRepositoryRoot();
+            videoFilePath = Path.Combine(repoRoot, "tmp", "SampleVideo1mb.mp4");
+            thumbnailFilePath = Path.Combine(repoRoot, "tmp", "sampleThumbnail.jpg");
+        }
+        catch (InvalidOperationException)
+        {
+            videoFilePath = "D:\\Downloads\\SampleVideo_1280x720_1mb.mp4";
+            thumbnailFilePath = "D:\\Downloads\\business-woman-pictures-pwo11q6cg9pxqq7c.jpg";
+        }
+
         login.Login();
         _driver.Navigate().GoToUrl("http://145.220.74.148:3000/upload");
         Thread.Sleep(1500);

@@ -10,6 +10,9 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       },
+      "RouteClaimsRequirement": {
+        "isSubscribed": "activeSubscription"
+      },
       "UseServiceDiscovery": true,
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -86,6 +89,9 @@
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
       },
+      "RouteClaimsRequirement": {
+        "isSubscribed": "activeSubscription"
+      },
       "UseServiceDiscovery": true,
       "LoadBalancerOptions": {
         "Type": "LeastConnection"
@@ -145,6 +151,9 @@
       "AuthenticationOptions": {
         "AuthenticationProviderKey": "Bearer",
         "AllowedScopes": []
+      },
+      "RouteClaimsRequirement": {
+        "isSubscribed": "activeSubscription"
       },
       "UseServiceDiscovery": true,
       "LoadBalancerOptions": {

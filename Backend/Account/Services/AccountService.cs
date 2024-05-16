@@ -17,7 +17,9 @@ public class AccountService(DatabaseContext _accountDbContext, IConfiguration co
         var account = await _accountDbContext.Accounts.FirstOrDefaultAsync(x => x.Email == request.email);
         if (account is null) return null;
         if (!BCrypt.Net.BCrypt.Verify(request.passwordUnhashed, account.PasswordHashed)) return null;
-        var authToken = AuthTokenGenerator.GenerateOwnAuthToken(account.AccId.ToString(),configuration);
+        var hasActiveSubscription = account.SubscriptionValidUntil > DateTime.Now;
+        
+        var authToken = AuthTokenGenerator.GenerateOwnAuthToken(account.AccId.ToString(),configuration,hasActiveSubscription);
         return new Tuple<AccountDTO, string>(AccountMapper.AccountToAccountDto(account), authToken);
     }
          
@@ -61,5 +63,14 @@ public class AccountService(DatabaseContext _accountDbContext, IConfiguration co
         await _dbRetryPolicy.ExecuteAsync(async () => await _accountDbContext.SaveChangesAsync());
         return AccountMapper.AccountToAccountDto(account);
     }
+
+
+    public async Task<AccountDTO> GetAccountById(Guid accId)
+    {
+        var account = await _accountDbContext.Accounts.FirstOrDefaultAsync(x => x.AccId == accId);
+        if (account is null) throw new Exception("Account not found");
+        return  AccountMapper.AccountToAccountDto(account);
+    }
+    
     
 }

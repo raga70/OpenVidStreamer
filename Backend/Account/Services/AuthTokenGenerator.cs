@@ -8,16 +8,24 @@ namespace Account.Services;
 
 public static class AuthTokenGenerator
 {
-    public static string GenerateOwnAuthToken(string accId, IConfiguration configuration)
+    public static string GenerateOwnAuthToken(string accId, IConfiguration configuration,bool hasActiveSubscription = false)
     {
         // Define token claims
-        var claims = new[]
+        var claims = new List<Claim>
         {
             new Claim("upn", accId),
             new Claim(JwtRegisteredClaimNames.Sub, accId),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         };
 
+        
+        // Add the "activeSubscription" role claim if the user has an active subscription
+        if (hasActiveSubscription)
+        {
+            claims.Add(new Claim("isSubscribed", "activeSubscription"));
+        }
+        
+        
         // Generate token
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["CustomJWT:Secret"]));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

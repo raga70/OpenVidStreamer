@@ -3,6 +3,8 @@ using Account.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using OpenVisStreamer.VideoLibrary;
+using Stripe;
+using AccountService = Account.Services.AccountService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,9 @@ builder.Services.AddDbContext<DatabaseContext>(options=>options.UseMySql(builder
 builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<StripePaymentService>();
 builder.Services.AddHealthChecks();
+
+StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+
 
 var app = builder.Build();
 
