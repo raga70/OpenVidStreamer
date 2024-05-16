@@ -1,10 +1,22 @@
-﻿import React, {useState} from 'react';
+﻿import  {useState} from 'react';
 import axios from 'axios';
 import './VideoUploadForm.css';
 import {VideoCategory, VideoCategoryNames, VideoUploadDTO} from "../../Model/VideoUploadDTO.ts";
 import {Label} from "flowbite-react";
 import {ApiServerBaseUrl} from "../../../configProvider.ts";
-import {useStoreState} from "../../persistenceProvider.ts"; // Assuming your CSS is in this file
+import {useStoreState} from "../../persistenceProvider.ts"; 
+import {
+    Flex,
+    Box,
+    FormControl,
+    FormLabel,
+    Input,
+    Textarea,
+    Select,
+    Button,
+    Progress,
+    VStack, Heading
+} from '@chakra-ui/react';
 
 const UploadPage = () => {
     const [videoMetadata, setVideoMetadata] = useState<VideoUploadDTO>({
@@ -71,6 +83,10 @@ const UploadPage = () => {
             alignItems: "center",
             height: "100vh"
         }}>
+        <VStack marginTop={-20} spacing={4}>
+            <Box backgroundColor={"#fff"} p={4} maxW="sm" borderWidth="1px" borderRadius="lg" boxShadow="lg" m="20px auto">
+                <Heading as="h2" size="lg" textAlign="center">Upload Video</Heading>
+            
         <form onSubmit={handleSubmit} style={{color:"black"}} className="upload-form">
             <div className="input-group">
                 <Label>Title</Label>
@@ -114,13 +130,13 @@ const UploadPage = () => {
 
             <div className="file-input-group">
                 <Label>Video File</Label>
-                <input style={{color: "white"}}
+                <input 
                        type="file"
                        name="videoFile"
                        onChange={handleVideoFileChange}
                 />
                 <Label>Thumbnail File</Label>
-                <input style={{color: "white"}}
+                <input 
                     type="file"
                     name="thumbnailFile"
                     onChange={handleThumbnailFileChange}
@@ -133,6 +149,8 @@ const UploadPage = () => {
                 </div>
             )}
         </form>
+            </Box>
+        </VStack>
         </div>
     );
 };

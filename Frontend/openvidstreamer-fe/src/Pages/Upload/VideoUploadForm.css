@@ -31,7 +31,7 @@
 
 label {
     font-weight: bold;
-    color: white !important;
+    color: white ;
 }
 
 .submit-btn:hover {

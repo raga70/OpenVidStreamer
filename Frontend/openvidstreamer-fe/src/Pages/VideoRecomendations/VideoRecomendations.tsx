@@ -2,7 +2,7 @@
 import {BiSolidDislike, BiSolidLike} from "react-icons/bi";
 import axios from "axios";
 import {ApiServerBaseUrl} from "../../../configProvider.ts";
-import {VideoCategory} from "../../Model/VideoUploadDTO.ts";
+import {GetVideoCategoryEnumIndex, VideoCategory} from "../../Model/VideoUploadDTO.ts";
 import {Video} from "../../Model/Video.ts";
 import {useStoreState} from "../../persistenceProvider.ts";
 import toast from "react-hot-toast";
@@ -12,7 +12,7 @@ import {useNavigate} from "react-router-dom";
 
 
 // Styles
-const styles = {
+export const stylesVideos = {
     videoList: {
         display: 'flex',
         flexWrap: 'wrap',
@@ -67,7 +67,7 @@ const truncateDescription = (description: string) => {
 };
 
 // VideoItem component for rendering individual video details
-const VideoItem = ({video}) => {
+export const VideoItem = ({video}) => {
     const authToken = useStoreState("authToken");
     const navigate = useNavigate();
     const [thumbnailFile, setThumbnailFile] = useState();
@@ -101,15 +101,15 @@ const VideoItem = ({video}) => {
 
     return (
 
-        <div onClick={handleVideoClick} style={styles.videoItem}>
-            <img src={thumbnailFile} alt={video.title} style={styles.videoThumbnail}/>
-            <div style={styles.videoContent}>
-                <h3 style={styles.videoTitle}>{video.title}</h3>
-                <p style={styles.videoDescription}>{truncateDescription(video.description)}</p>
+        <div onClick={handleVideoClick} style={stylesVideos.videoItem}>
+            <img src={thumbnailFile} alt={video.title} style={stylesVideos.videoThumbnail}/>
+            <div style={stylesVideos.videoContent}>
+                <h3 style={stylesVideos.videoTitle}>{video.title}</h3>
+                <p style={stylesVideos.videoDescription}>{truncateDescription(video.description)}</p>
                 <div style={{display: "flex", justifyContent: "space-between"}}>
                     <div
-                        style={styles.videoUploadDate}>Uploaded: {new Date(video.uploadDateTime).toLocaleDateString()}</div>
-                    <div style={styles.videoStats}>
+                        style={stylesVideos.videoUploadDate}>Uploaded: {new Date(video.uploadDateTime).toLocaleDateString()}</div>
+                    <div style={stylesVideos.videoStats}>
                         <div style={{display: "flex", alignItems: "center", flexDirection: "column"}}>
                             <div style={{display: "flex"}}>
                                 <BiSolidLike/><BiSolidDislike/>
@@ -125,6 +125,7 @@ const VideoItem = ({video}) => {
     )
 };
 
+
 // VideoList component for rendering the list of videos
 const VideoListCarosel = ({categoryName, isHotVideos}) => {
 
@@ -134,7 +135,7 @@ const VideoListCarosel = ({categoryName, isHotVideos}) => {
         try {
             const response = await axios.get(ApiServerBaseUrl() + '/videolib/recommendedVideos', {
                 params: {
-                    category: category,
+                    category: GetVideoCategoryEnumIndex(category),
                     topN: topN,
                 },
                 headers: {
@@ -178,14 +179,17 @@ const VideoListCarosel = ({categoryName, isHotVideos}) => {
 
     return (
         <div>
-            {isHotVideos ? <h2>HotVideos</h2> :
-                <h2>{categoryName == VideoCategory.Other ? 'Recommended' : categoryName}</h2>}
-            <div style={styles.videoList}>
+            {isHotVideos ? <h2 style={{fontWeight:700,margin:20,marginBottom:0}}>HotVideos 🔥</h2> :
+                <h2 style={{fontWeight:700,margin:20,marginBottom:0}}>{categoryName == VideoCategory.Other ? 'Recommended👍' : categoryName }</h2>}
+            <div style={stylesVideos.videoList}>
                 {videos.map(video => (
                     <VideoItem  key={video.videoId} video={video}/>
                 ))}
             </div>
+            <hr/>
+            <br/>
         </div>
+        
     );
 };
 

@@ -74,3 +74,9 @@ export type VideoUploadDTO = {
     description: string;
     category: VideoCategory;
 };
+
+
+export function GetVideoCategoryEnumIndex(value: VideoCategory): number {
+    const enumValues = Object.values(VideoCategory); // Create an array of enum values
+    return enumValues.indexOf(value);        // Return the index of the value
+}

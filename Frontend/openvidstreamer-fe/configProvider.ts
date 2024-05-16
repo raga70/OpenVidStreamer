@@ -21,3 +21,20 @@ export const ApiServerBaseUrl = () =>{
     }
     return appSettings.ApiServerBaseUrl;
 }
+
+
+export const SubscriptionCost = () =>{
+    
+        if (!appSettings) {
+            throw new Error("Config not loaded");
+        }
+        return appSettings.SubscriptionCost;
+    }
+    
+export const StripePublishableKey = () =>{
+    
+        if (!appSettings) {
+            throw new Error("Config not loaded");
+        }
+        return appSettings.StripePublishableKey;
+    }   

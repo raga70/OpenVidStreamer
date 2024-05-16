@@ -26,11 +26,11 @@ import {dispatch} from "./persistenceProvider.ts";
                 setTimeout(function () {
                     window.location.reload();
                 }, 2000);
-            } else if (error.response && error.response.status === 522) {
-                toast("Document is no longer available, Please wait...")
-                setTimeout(function () {
-                    window.location.reload();
-                }, 3000);
+            } else if (error.response && error.response.status === 403) {
+                toast.error("Forbiden !, it seems you dont have an active subscription, please navigate to account page to activate one")
+                // setTimeout(function () {
+                //     window.location.reload();
+                // }, 3000);
             } else if (error.response && (error.response.status === 483 || error.response.status === 518 || error.response.status === 519 || error.response.status === 521 || error.response.status === 517)) {
                 //ingore errors that are handled inside the component
             } else {

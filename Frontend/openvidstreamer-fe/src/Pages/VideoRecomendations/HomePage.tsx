@@ -35,7 +35,7 @@ const HomePage = () => {
 
     return (
         
-        <div className={"vomitBackground"} style={{overflowY:"scroll", height:"100vh"}}>
+        <div  style={{overflowY:"scroll", height:"calc(100vh - 70px)"}}>
             <VideoListCarosel isHotVideos={false} categoryName={VideoCategory.Other}/>
             <VideoListCarosel isHotVideos={true}  categoryName={VideoCategory.Other}/>
             {favoriteCategories.length >0 ? favoriteCategories.map((category) => (

@@ -10,12 +10,24 @@ import {loadConfig} from "../configProvider.ts";
 import VideoPlayer from "./Pages/VideoPlayer.tsx";
 import Navbar from "./Pages/NavBar.tsx";
 import {Toaster} from "react-hot-toast";
+import AccountPage from "./Pages/Account/AccountPage.tsx";
+
+import {ChakraProvider, extendTheme} from "@chakra-ui/react";
+import PaymentProcessedPage from "./Pages/Account/PaymentProcessedPage.tsx";
+import Search from "./Pages/Search.tsx";
+
 
 function App() {
 
     const authToken = useStoreState("authToken");
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false)
 
+    const chackraConfig = {
+        initialColorMode: 'dark',  // Set the initial color mode to dark
+        useSystemColorMode: false, // Optionally allow users to use their system color mode
+    };
+    const theme = extendTheme({ chackraConfig });
+    
     useEffect(() => {
         const loadConf = async () => {
             await loadConfig()
@@ -31,6 +43,7 @@ function App() {
 
     return (
         <>
+            <ChakraProvider theme={theme}>
             {!isLoggedIn ? <LoginPageComp/> :
                 <Router>
                     <Toaster />
@@ -40,10 +53,14 @@ function App() {
                         <Route path="/upload" element={<UploadPage/>}/> 
                         <Route path="/home" element={<HomePage/>}/>
                         <Route path="/video-player" element={<VideoPlayer />} />
+                        <Route path="/account" element={<AccountPage/>}/>
+                        <Route path="/paymentProcessed" element={<PaymentProcessedPage/>}/>
+                        <Route path="/search" element={<Search/>}/>
                         <Route path="/" element={<HomePage/>}/>
                     </Routes>
                 </Router>
             }
+            </ChakraProvider>
         </>
     );
 }

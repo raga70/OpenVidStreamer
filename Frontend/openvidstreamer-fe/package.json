@@ -10,11 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
     "@preact/signals-react": "^2.0.0",
     "@react-login-page/page1": "^1.0.4",
+    "@stripe/react-stripe-js": "^2.7.1",
+    "@stripe/stripe-js": "^3.4.0",
     "autoprefixer": "^10.4.18",
     "axios": "^1.6.7",
     "flowbite-react": "^0.7.2",
+    "framer-motion": "^11.2.2",
     "hls.js": "^1.5.7",
     "postcss": "^8.4.35",
     "react": "^18.2.0",
