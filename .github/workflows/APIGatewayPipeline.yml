@@ -42,4 +42,4 @@ jobs:
         context: ./Backend/
         file: Backend/APIGateway/Dockerfile
         push: true
-        tags: openvidstreamer/APIGateway:latest
+        tags: openvidstreamer/apigateway:latest
