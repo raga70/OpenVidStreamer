@@ -27,7 +27,7 @@ The platform features a recommendation algorithm that identifies videos a user l
 
 <hr/>
 
-Demo of the platform:
+Demo of the platform: [DemoVideoOfTheUI](https://youtu.be/RJKFKMjOKzw)
 
 <hr/>
 
