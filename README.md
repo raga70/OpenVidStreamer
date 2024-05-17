@@ -35,7 +35,9 @@ Demo of the platform:
 
 #### DOCS:  [ProjectDocumentation](https://github.com/raga70/OpenVidStreamer/tree/main/Docs) 
 
-![C2](https://github.com/raga70/OpenVidStreamer/assets/8299535/8b049baf-dba5-4f65-bb5e-21c5fda00201)
+C2:
+![C2WithBackgroud](https://github.com/raga70/OpenVidStreamer/assets/8299535/fc696bc4-0a17-428e-914f-cf6eaa189642)
+
 
 
 
@@ -44,7 +46,7 @@ Demo of the platform:
 
 ### Installation
 
-Download the latest OVF template from the releases section of this repository  to deploy on your preferred cloud provider or  deploy our Kubernetes files (mandatory for large-scale deployments).
+Download the latest OVF template from the releases section of this repository  to deploy on your preferred cloud provider or  deploy our Kubernetes files (mandatory for large-scale deployments), (frontend not built in the Kubernetes files, just preform a `vite build` and deploy it, ex. via nginx ).
 OVF image:  [OpenVidStreamerExampleVMrelese](https://github.com/raga70/OpenVidStreamer/)
 Kubernetes files: [OpenVidStreamerKubernetesFiles](https://github.com/raga70/OpenVidStreamer/tree/main/OpenVidStreamerKubernetesFiles)
 
