@@ -10,6 +10,11 @@ public static class AuthTokenGenerator
 {
     public static string GenerateOwnAuthToken(string accId, IConfiguration configuration,bool hasActiveSubscription = false)
     {
+         string  _jwtSecret = Environment.GetEnvironmentVariable("JwtSecret") ?? configuration["CustomJWT:Secret"];
+         string _jwtExpiration = Environment.GetEnvironmentVariable("JwtExpiration") ??
+                                 configuration["CustomJWT:ExpirationInHours"];
+        
+        
         // Define token claims
         var claims = new List<Claim>
         {
@@ -27,14 +32,14 @@ public static class AuthTokenGenerator
         
         
         // Generate token
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["CustomJWT:Secret"]));
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecret));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var token = new JwtSecurityToken(
             issuer: configuration["CustomJWT:Issuer"],
             audience: configuration["CustomJWT:Audience"],
             claims: claims,
-            expires: DateTime.Now.AddMinutes(Convert.ToInt32(configuration["CustomJWT:ExpirationInHours"])),  // Token expiry time
+            expires: DateTime.Now.AddMinutes(Convert.ToInt32(_jwtExpiration)),  // Token expiry time
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);

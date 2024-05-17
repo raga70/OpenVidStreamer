@@ -2,8 +2,7 @@
 kind: Deployment
 metadata:
   name: render-deployment
-spec:
-  replicas: 2 
+spec: 
   selector:
     matchLabels:
       app: render

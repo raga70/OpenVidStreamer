@@ -9,6 +9,9 @@ using Stripe;
 namespace Account.Services;
 public class StripePaymentService
 {
+
+    private readonly string _stripeRedirectUrl;
+    
     private readonly DatabaseContext _accountDbContext;
     private readonly IAsyncPolicy<PaymentIntent> _retryPolicy = Policy
         .HandleResult<PaymentIntent>(paymentIntent => paymentIntent.Status == "requires_action" || paymentIntent.Status == "requires_payment_method")
@@ -22,6 +25,8 @@ public class StripePaymentService
     {
         _accountDbContext = accountDbContext;
         _configuration = configuration;
+           _stripeRedirectUrl = Environment.GetEnvironmentVariable("StripeRedirectUrl") ??
+            _configuration.GetValue<string>("Stripe:RedirectUrl");
     }
 
     public async Task<PaymentIntent> ProcessPaymentAsync(IncomingPaymentDTO incomingPayment, string accId)
@@ -50,7 +55,7 @@ public class StripePaymentService
             Description = $"OpenVidStreamer - Payment of monthly subscription for AccountNumber: {accId}",
             Confirm = true,
             UseStripeSdk = true,
-            ReturnUrl = _configuration.GetValue<string>("Stripe:RedirectUrl"),
+            ReturnUrl = _stripeRedirectUrl,
             Customer = customer.Id
         };
 

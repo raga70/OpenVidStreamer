@@ -21,7 +21,8 @@ builder.Services.AddScoped<AccountService>();
 builder.Services.AddScoped<StripePaymentService>();
 builder.Services.AddHealthChecks();
 
-StripeConfiguration.ApiKey = builder.Configuration["Stripe:SecretKey"];
+var stripeKey = Environment.GetEnvironmentVariable("StripeSecretKey") ?? builder.Configuration["Stripe:SecretKey"];
+StripeConfiguration.ApiKey = stripeKey;
 
 
 var app = builder.Build();

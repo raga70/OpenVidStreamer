@@ -26,4 +26,12 @@ spec:
                   fieldPath: status.podIP
             - name: servicePort
               value: "8081"
-       
+            # CHANGE ALL ENV VARS BELLOW !!!!!  
+            - name: StripeSecretKey
+              value: "sk_test_51J4J7sk_test_51OpbAqLhuzbscNjkorQ4sXh7YsruJX0mYn3seAyim6fAaxZ2vnawug50BZknBpdbKCLOTNu1eT3pXWG84bDKLhab00kyOhVEW2"
+            - name: StripeRedirectUrl
+              value: "http://145.220.74.148:3000/paymentProcessed"
+            - name: JwtSecret
+              value: "rxio0SNqgU2yYEvOyZJ1greSMC75JBU0D6IxBZBxIXm+xzSr2ZZ+ZV/PHoV7sNYg7f9PCHulGu+QHG5qaSNpTQ=="
+            - name: JwtExpiration
+              value: "72"

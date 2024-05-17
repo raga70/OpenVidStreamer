@@ -19,6 +19,9 @@ namespace OpenVidStreamer.APIGateway.Auth;
     
     public class OwnAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
+
+
+        private readonly string _jwtSecret; 
         
         IConfiguration _configuration;
         
@@ -30,6 +33,7 @@ namespace OpenVidStreamer.APIGateway.Auth;
             : base(options, logger, encoder, clock)
         {
             _configuration = configuration;
+            _jwtSecret = Environment.GetEnvironmentVariable("JwtSecret") ?? configuration["CustomJWT:Secret"];
         }
 
 
@@ -63,6 +67,8 @@ namespace OpenVidStreamer.APIGateway.Auth;
             }
             try
             {
+                
+                
                 var validationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -70,7 +76,7 @@ namespace OpenVidStreamer.APIGateway.Auth;
                     ValidateLifetime = true,
                     ValidIssuer = _configuration["CustomJWT:Issuer"], 
                     ValidAudience = _configuration["CustomJWT:Audience"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["CustomJWT:Secret"])) 
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSecret)) 
                 };
 
                 var handler = new JwtSecurityTokenHandler();

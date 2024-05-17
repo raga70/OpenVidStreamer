@@ -64,6 +64,7 @@ const UploadPage = () => {
                 onUploadProgress: progressEvent => {
                     const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
                     setUploadPercentage(percentCompleted);
+                    console.log("Upload progress: " + percentCompleted + "%")
                 }
             });
             alert('Video uploaded successfully!');

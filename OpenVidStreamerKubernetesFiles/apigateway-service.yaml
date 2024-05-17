@@ -3,10 +3,10 @@ kind: Service
 metadata:
   name: apigateway-service
 spec:
-  type: LoadBalancer
+  type: NodePort
   selector:
     app: apigateway
   ports:
-    - protocol: TCP
-      port: 8000 
+    - port: 8000
       targetPort: 8000 
+      nodePort: 31800 
