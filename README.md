@@ -31,67 +31,67 @@ Demo of the platform:
 
 <hr/>
 
-Architecture:
+### Architecture:
 
-DOCS: 
+#### DOCS:  [ProjectDocumentation](https://github.com/raga70/OpenVidStreamer/tree/main/Docs) 
 
 ![C2](https://github.com/raga70/OpenVidStreamer/assets/8299535/8b049baf-dba5-4f65-bb5e-21c5fda00201)
 
 
-OpenVidStreamer is a microservice architecture designed for horizontal scaling
 
 
-# How To Install
+## Getting Started
 
-In the releases of this repository, you will find  OVF template, you can install it in your favorite cloud provider 
+### Installation
 
+Download the latest OVF template from the releases section of this repository  to deploy on your preferred cloud provider or  deploy our Kubernetes files (mandatory for large-scale deployments).
+OVF image:  [OpenVidStreamerExampleVMrelese](https://github.com/raga70/OpenVidStreamer/)
+Kubernetes files: [OpenVidStreamerKubernetesFiles](https://github.com/raga70/OpenVidStreamer/tree/main/OpenVidStreamerKubernetesFiles)
 
-this system is built to be deployed on  Kubernetes, but if you want to do your own thing, the microservices` container images can be found at https://hub.docker.com/u/openvidstreamer
-
-#### prerequisite:
-microk8s or any other Kubernetes engine ,
-
-
-#### 1 modify the account-deployment.yaml variables 
-
-location of the file in release .vmdk/ovf  `~/OpenVidStreamerKubernetesFiles/account-deployment.yaml`
-
-1.1 `StripeSecretKey` -  For processing payments -  go and make a free account on https://stripe.com/ ,  then navigate to Developers -> API keys -> Copy the SecretKey 
-1.2 `StripeRedirectUrl` - change this env var to with your public domain and port 
-1.3 `JwtSecret` - REPLACE THIS !!!  you can use https://generate.plus/en/base64 to geneare a secure secret use at least 30chars
-1.4 `JwtExpiration` - this is the time in hours that a user will stay logged in inside the platform without the need of re-auth 
+Designed for Kubernetes environments, the microservices' container images are available at our [Docker Hub repository](https://hub.docker.com/u/openvidstreamer).
 
 
 
+### Prerequisites
+
+- Kubernetes engine (e.g., MicroK8s)
+- Modify `account-deployment.yaml` as per the following   (location in OVF `~/OpenVidStreamerKubernetesFiles/account-deployment.yaml`):
+    - `StripeSecretKey`: Obtain from [Stripe API keys](https://stripe.com/docs/keys)
+    - `StripeRedirectUrl`: Update with your domain and port
+    - `JwtSecret`: Generate a secure base64 string ([Generate Plus](https://generate.plus/en/base64))
+    - `JwtExpiration`: Set the session duration in hours
 ![image](https://github.com/raga70/OpenVidStreamer/assets/8299535/07bd67e0-82f9-4312-ab7f-87f42262223d)
 
 
+<hr/>
 
 
-
-#### port forwarding
-
+### port forwarding
+Adjust port forwarding settings as necessary to ensure proper routing of service traffic.
 ![portForwards](https://github.com/raga70/OpenVidStreamer/assets/8299535/f604a491-0bc6-4e6f-97a7-c3713870b1ef)
 
 
 
+<hr/>
 
-
-#### Databases (skip for OVF)
+### Databases (skip for OVF)
 
 SQL files for empty databases: https://gist.github.com/raga70/175fe4ae885c2d644cd4f96616697659
+#### need to scale up?
+I will recommend using a managed database
+simply do not use Kubernetes files for the databases, and modify the other ones to point to your managed database provider 
 
-simply do not use Kubernetes files for the databases, and modify the other once to point to your managed database provider 
+<hr/>
 
 
-
-#### Storage bucket (skip for OVF)
+### Storage bucket (skip for OVF)
 the Kubernetes deployment relies on an NFS server on the host machine, to store video files (do not spin it up in a pod it will not work!!!)
 1. install an nfs server
 2. modify the nfs Kubernetes files if necessary
-###### need to scale up?
+#### need to scale up?
 I will recommend to switch to a cloud storage bucket (AWS S3, Azure Blob) 
 
+<hr/>
 
 
 
@@ -100,15 +100,16 @@ the only thing you need to do to get it running is port forward, and input your 
 the VM comes with the Observability stack so you can monitor your resource usage example https://youtu.be/9J7ks5oLtI8 , you can also monitor the service discovery through Consul
 
 
-if you encounter any problems: SSH into your vm -> and delete all pods in the default namespace: `microk8s kubectl delete pods --all`
+if you encounter any problems: SSH into your VM -> and delete all pods in the default namespace: `microk8s kubectl delete pods --all`
 
 notice: the VM has only 50GB assigned for video storage, so you might hit the limit pretty quickly, you can add an extra virtual hard drive and mount it to `/`
-notice: the OVF is just a starting example, it is of course recommended to host directly on AKS/GKS, use a managed database, and a storage bucket from your cloud platform. furthermore if you are really getting a lot of traffic use your cloud provider`s API gateway (you will need to re-engineer auth)
+notice: the OVF is just a starting example, it is of course recommended to host directly on AKS/GKS, use a managed database, and a storage bucket from your cloud platform. furthermore, if you are really getting a lot of traffic use your cloud provider\`s API gateway (you will need to re-engineer auth),   Ocelot (the project`s API gateway) is the slowest link in the system 
 
+<hr/>
 
 ### Development
 to run the microservices on bear metal you will need:
-`Consul Service Discovary`, `Docker container with Redis`, `RabbitMQ`, `Mysql` <- create Databases and run `dotnet ef database update (refer to C2)`
+Consul Service Discovery, Docker container with Redis, RabbitMQ, Mysql <- create Databases and run `dotnet ef database update `(refer to C2)
 
 
 
