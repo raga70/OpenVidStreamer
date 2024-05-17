@@ -97,9 +97,11 @@ public class StripePaymentService
         {
             // Update the account balance only if payment succeeds
             var account = _accountDbContext.Accounts.FirstOrDefault(a => a.AccId == Guid.Parse(accId));
+
+            decimal paymentAmountBackInEuros = paymentIntent.Amount / 100;
             if (account != null)
             {
-                account.Balance += paymentIntent.Amount;
+                account.Balance += paymentAmountBackInEuros;
                 await _accountDbContext.SaveChangesAsync();
             }
         }
