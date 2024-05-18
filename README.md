@@ -103,8 +103,12 @@ the VM comes with the Observability stack so you can monitor your resource usage
 
 
 if you encounter any problems: SSH into your VM -> and delete all pods in the default namespace: `microk8s kubectl delete pods --all`
+<br/>
+<br/>
+<br/>
 
 notice: the VM has only 50GB assigned for video storage, so you might hit the limit pretty quickly, you can add an extra virtual hard drive and mount it to `/`
+<br/>
 <br/>
 notice: the OVF template is just a starting example, it is of course recommended to host directly on AKS/GKS, use a managed database, and a storage bucket from your cloud platform. furthermore, if you are really getting a lot of traffic use your cloud provider\`s API gateway (you will need to re-engineer auth),   Ocelot (the project`s API gateway) is the slowest link in the system 
 
