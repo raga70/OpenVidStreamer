@@ -7,6 +7,16 @@ on:
 
 jobs:
 
+wait-for-deploy-finish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Wait for  Deployment of Application
+        run: sleep 640 
+
+
   zap_scan:
     runs-on: ubuntu-latest
     steps:
