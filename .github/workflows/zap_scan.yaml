@@ -7,7 +7,7 @@ on:
 
 jobs:
 
-wait-for-deploy-finish:
+  wait-for-deploy-finish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -18,6 +18,7 @@ wait-for-deploy-finish:
 
 
   zap_scan:
+    needs: wait-for-deploy-finish
     runs-on: ubuntu-latest
     steps:
       - name: ZAP Scan
